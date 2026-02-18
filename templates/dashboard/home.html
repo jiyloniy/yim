@@ -1,0 +1,207 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+{% block page_subtitle %}Umumiy ko'rsatkichlar va statistika{% endblock %}
+
+{% block content %}
+<!-- Stats Row -->
+<div class="row g-4 mb-4">
+    <div class="col-xl-3 col-md-6 animate-in">
+        <div class="stat-card">
+            <div class="stat-icon blue"><i class="bi bi-people-fill"></i></div>
+            <div class="stat-number">{{ total_users }}</div>
+            <div class="stat-label">Jami foydalanuvchilar</div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 animate-in">
+        <div class="stat-card">
+            <div class="stat-icon cyan"><i class="bi bi-mortarboard-fill"></i></div>
+            <div class="stat-number">{{ total_students }}</div>
+            <div class="stat-label">Talabalar</div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 animate-in">
+        <div class="stat-card">
+            <div class="stat-icon purple"><i class="bi bi-cpu-fill"></i></div>
+            <div class="stat-number">{{ total_labs }}</div>
+            <div class="stat-label">Laboratoriyalar</div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 animate-in">
+        <div class="stat-card">
+            <div class="stat-icon lime"><i class="bi bi-journal-code"></i></div>
+            <div class="stat-number">{{ total_programs }}</div>
+            <div class="stat-label">Dasturlar</div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-xl-3 col-md-6 animate-in">
+        <div class="stat-card">
+            <div class="stat-icon blue"><i class="bi bi-calendar-event-fill"></i></div>
+            <div class="stat-number">{{ total_events }}</div>
+            <div class="stat-label">Tadbirlar</div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 animate-in">
+        <div class="stat-card">
+            <div class="stat-icon cyan"><i class="bi bi-lightbulb-fill"></i></div>
+            <div class="stat-number">{{ total_projects }}</div>
+            <div class="stat-label">Loyihalar</div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 animate-in">
+        <div class="stat-card">
+            <div class="stat-icon purple"><i class="bi bi-building"></i></div>
+            <div class="stat-number">{{ total_partners }}</div>
+            <div class="stat-label">Hamkorlar</div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 animate-in">
+        <div class="stat-card">
+            <div class="stat-icon lime"><i class="bi bi-inbox-fill"></i></div>
+            <div class="stat-number">{{ total_applications }}</div>
+            <div class="stat-label">Arizalar <span class="badge-status badge-pending ms-1">{{ pending_applications }} kutilmoqda</span></div>
+        </div>
+    </div>
+</div>
+
+<!-- Tables Row -->
+<div class="row g-4">
+    <!-- Recent Applications -->
+    <div class="col-xl-6 animate-in">
+        <div class="data-card">
+            <div class="data-card-header">
+                <h6><i class="bi bi-inbox me-2 text-primary"></i>So'nggi arizalar</h6>
+                <a href="{% url 'dashboard:application_list' %}" class="btn btn-sm btn-outline-primary" style="border-radius: 8px; font-size: 12px;">Barchasi</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-modern mb-0">
+                    <thead>
+                        <tr>
+                            <th>Foydalanuvchi</th>
+                            <th>Dastur</th>
+                            <th>Holat</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for app in recent_applications %}
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="user-avatar" style="width:30px;height:30px;font-size:11px;border-radius:8px;">{{ app.user.username|first|upper }}</div>
+                                    {{ app.user.get_full_name|default:app.user.username }}
+                                </div>
+                            </td>
+                            <td>{{ app.program.name|truncatechars:25 }}</td>
+                            <td>
+                                <span class="badge-status badge-{{ app.status }}">
+                                    {% if app.status == 'pending' %}Kutilmoqda
+                                    {% elif app.status == 'approved' %}Tasdiqlangan
+                                    {% else %}Rad etilgan{% endif %}
+                                </span>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="3" class="text-center text-muted py-4">
+                                <i class="bi bi-inbox" style="font-size: 24px; opacity: 0.3;"></i>
+                                <p class="mt-2 mb-0">Arizalar yo'q</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upcoming Events -->
+    <div class="col-xl-6 animate-in">
+        <div class="data-card">
+            <div class="data-card-header">
+                <h6><i class="bi bi-calendar-event me-2 text-primary"></i>Kelgusi tadbirlar</h6>
+                <a href="{% url 'dashboard:event_list' %}" class="btn btn-sm btn-outline-primary" style="border-radius: 8px; font-size: 12px;">Barchasi</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-modern mb-0">
+                    <thead>
+                        <tr>
+                            <th>Tadbir</th>
+                            <th>Turi</th>
+                            <th>Sana</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for event in upcoming_events %}
+                        <tr>
+                            <td>{{ event.title|truncatechars:30 }}</td>
+                            <td>
+                                <span class="badge-status {% if event.event_type == 'masterclass' %}badge-approved{% elif event.event_type == 'hackathon' %}badge-pending{% else %}badge-active{% endif %}">
+                                    {{ event.get_event_type_display }}
+                                </span>
+                            </td>
+                            <td style="font-family: 'JetBrains Mono', monospace; font-size: 12px;">{{ event.date|date:"d.m.Y H:i" }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="3" class="text-center text-muted py-4">
+                                <i class="bi bi-calendar" style="font-size: 24px; opacity: 0.3;"></i>
+                                <p class="mt-2 mb-0">Tadbirlar yo'q</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent News -->
+<div class="row g-4 mt-0">
+    <div class="col-12 animate-in">
+        <div class="data-card">
+            <div class="data-card-header">
+                <h6><i class="bi bi-newspaper me-2 text-primary"></i>So'nggi yangiliklar</h6>
+                <a href="{% url 'dashboard:news_list' %}" class="btn btn-sm btn-outline-primary" style="border-radius: 8px; font-size: 12px;">Barchasi</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-modern mb-0">
+                    <thead>
+                        <tr>
+                            <th>Sarlavha</th>
+                            <th>Holat</th>
+                            <th>Yaratilgan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in recent_news %}
+                        <tr>
+                            <td>{{ item.title|truncatechars:60 }}</td>
+                            <td>
+                                {% if item.is_published %}
+                                <span class="badge-status badge-approved">Chop etilgan</span>
+                                {% else %}
+                                <span class="badge-status badge-pending">Qoralama</span>
+                                {% endif %}
+                            </td>
+                            <td style="font-family: 'JetBrains Mono', monospace; font-size: 12px;">{{ item.created_at|date:"d.m.Y" }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="3" class="text-center text-muted py-4">
+                                <i class="bi bi-newspaper" style="font-size: 24px; opacity: 0.3;"></i>
+                                <p class="mt-2 mb-0">Yangiliklar yo'q</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

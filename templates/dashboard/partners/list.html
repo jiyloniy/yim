@@ -1,0 +1,106 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Hamkorlar{% endblock %}
+{% block page_title %}Hamkorlar{% endblock %}
+{% block page_subtitle %}Barcha hamkorlarni boshqarish{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+    <div class="search-box">
+        <i class="bi bi-search"></i>
+        <form method="get">
+            <input type="text" class="form-control" name="search" value="{{ search }}" placeholder="Qidirish...">
+        </form>
+    </div>
+    <a href="{% url 'dashboard:partner_create' %}" class="btn btn-primary-custom">
+        <i class="bi bi-plus-lg me-2"></i>Yangi hamkor
+    </a>
+</div>
+
+<div class="data-card animate-in">
+    <div class="table-responsive">
+        <table class="table table-modern mb-0">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Logotip</th>
+                    <th>Nomi</th>
+                    <th>Veb-sayt</th>
+                    <th>Tartib</th>
+                    <th>Holat</th>
+                    <th>Amallar</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for partner in partners %}
+                <tr>
+                    <td style="font-family: 'JetBrains Mono'; font-size: 12px;">{{ forloop.counter }}</td>
+                    <td>
+                        {% if partner.logo %}
+                        <img src="{{ partner.logo.url }}" class="table-img" alt="">
+                        {% else %}
+                        <div class="table-img d-flex align-items-center justify-content-center bg-light"><i class="bi bi-image text-muted"></i></div>
+                        {% endif %}
+                    </td>
+                    <td><strong>{{ partner.name }}</strong></td>
+                    <td>
+                        {% if partner.website %}
+                        <a href="{{ partner.website }}" target="_blank" class="text-primary text-decoration-none">
+                            {{ partner.website }}<i class="bi bi-box-arrow-up-right ms-1" style="font-size: 11px;"></i>
+                        </a>
+                        {% else %}
+                        <span class="text-muted">—</span>
+                        {% endif %}
+                    </td>
+                    <td style="font-family: 'JetBrains Mono'; font-size: 12px;">{{ partner.order }}</td>
+                    <td>
+                        {% if partner.is_active %}
+                        <span class="badge-status badge-active">Faol</span>
+                        {% else %}
+                        <span class="badge-status badge-inactive">Nofaol</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="d-flex gap-2">
+                            <a href="{% url 'dashboard:partner_edit' partner.pk %}" class="btn-action edit" title="Tahrirlash"><i class="bi bi-pencil"></i></a>
+                            <button class="btn-action delete" title="O'chirish" data-bs-toggle="modal" data-bs-target="#deleteModal{{ partner.pk }}"><i class="bi bi-trash"></i></button>
+                        </div>
+                        <!-- Delete Modal -->
+                        <div class="modal fade" id="deleteModal{{ partner.pk }}" tabindex="-1">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h6 class="modal-title"><i class="bi bi-exclamation-triangle text-danger me-2"></i>O'chirishni tasdiqlang</h6>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <strong>"{{ partner.name }}"</strong> hamkorini o'chirmoqchimisiz?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-light" data-bs-dismiss="modal" style="border-radius:10px;">Bekor qilish</button>
+                                        <form method="post" action="{% url 'dashboard:partner_delete' partner.pk %}">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-danger" style="border-radius:10px;">O'chirish</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7">
+                        <div class="empty-state">
+                            <i class="bi bi-building"></i>
+                            <h5>Hamkorlar topilmadi</h5>
+                            <p>Yangi hamkor qo'shish uchun yuqoridagi tugmani bosing</p>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,208 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kirish | YIM Student</title>
+    <link rel="icon" type="image/svg+xml" href="{% static 'favicon.svg' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Inter', sans-serif; }
+        body {
+            min-height: 100vh; display: flex;
+            background: #0B0F15; overflow: hidden; position: relative;
+        }
+        /* Left Panel — Illustration */
+        .left-panel {
+            flex: 1; display: flex; align-items: center; justify-content: center;
+            background: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
+            position: relative; overflow: hidden;
+        }
+        .left-panel::before {
+            content: ''; position: absolute; inset: 0;
+            background:
+                radial-gradient(circle at 30% 70%, rgba(0,95,253,0.12) 0%, transparent 50%),
+                radial-gradient(circle at 70% 30%, rgba(0,209,255,0.08) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(176,0,255,0.05) 0%, transparent 50%);
+        }
+        .left-panel::after {
+            content: ''; position: absolute; inset: 0;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+        .left-content { position: relative; z-index: 1; text-align: center; max-width: 400px; padding: 40px; }
+        .left-content .hero-icon {
+            width: 90px; height: 90px; border-radius: 26px;
+            background: linear-gradient(135deg, #005FFD 0%, #00D1FF 100%);
+            display: inline-flex; align-items: center; justify-content: center;
+            font-size: 40px; color: #fff; margin-bottom: 30px;
+            box-shadow: 0 12px 40px rgba(0,95,253,0.35);
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-12px); }
+        }
+        .left-content h2 {
+            font-family: 'Montserrat', sans-serif; font-weight: 800;
+            font-size: 28px; color: #fff; margin-bottom: 12px; line-height: 1.3;
+        }
+        .left-content h2 span { color: #00D1FF; }
+        .left-content p { color: rgba(255,255,255,0.4); font-size: 14px; line-height: 1.7; }
+        .feature-list { text-align: left; margin-top: 30px; }
+        .feature-list .item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 10px 0; color: rgba(255,255,255,0.5); font-size: 13px;
+        }
+        .feature-list .item i {
+            color: #00D1FF; font-size: 16px; width: 20px; text-align: center;
+        }
+        /* Floating shapes */
+        .shape { position: absolute; border-radius: 50%; opacity: 0.03; }
+        .shape-1 { width: 400px; height: 400px; background: #005FFD; top: -150px; right: -100px; animation: drift 20s infinite; }
+        .shape-2 { width: 250px; height: 250px; background: #00D1FF; bottom: -80px; left: -60px; animation: drift 16s infinite reverse; }
+        .shape-3 { width: 150px; height: 150px; background: #B000FF; top: 40%; left: 60%; animation: drift 12s infinite; }
+        @keyframes drift {
+            0%, 100% { transform: translate(0, 0); }
+            25% { transform: translate(20px, -20px); }
+            50% { transform: translate(-15px, 15px); }
+            75% { transform: translate(10px, 10px); }
+        }
+
+        /* Right Panel — Form */
+        .right-panel {
+            width: 480px; display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            padding: 40px;
+            background: linear-gradient(180deg, #111827 0%, #0B0F15 100%);
+            border-left: 1px solid rgba(255,255,255,0.05);
+        }
+        .login-form { width: 100%; max-width: 360px; }
+        .login-form .form-title {
+            margin-bottom: 6px; color: #fff;
+            font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 22px;
+        }
+        .login-form .form-sub {
+            color: rgba(255,255,255,0.35); font-size: 13px; margin-bottom: 32px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .field-group { margin-bottom: 18px; }
+        .field-group label {
+            color: rgba(255,255,255,0.45); font-size: 11px;
+            font-weight: 600; text-transform: uppercase;
+            letter-spacing: 1px; margin-bottom: 6px; display: block;
+        }
+        .field-group .input-wrap {
+            position: relative;
+        }
+        .field-group .input-wrap i {
+            position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+            color: rgba(255,255,255,0.2); font-size: 16px;
+        }
+        .field-group input {
+            width: 100%; padding: 13px 16px 13px 44px;
+            background: rgba(255,255,255,0.04);
+            border: 1.5px solid rgba(255,255,255,0.08);
+            border-radius: 12px; color: #fff; font-size: 14px;
+            transition: all 0.2s; outline: none;
+        }
+        .field-group input:focus {
+            border-color: #005FFD;
+            background: rgba(255,255,255,0.06);
+            box-shadow: 0 0 0 3px rgba(0,95,253,0.12);
+        }
+        .field-group input::placeholder { color: rgba(255,255,255,0.2); }
+        .btn-submit {
+            width: 100%; padding: 14px; border: none; border-radius: 12px;
+            background: linear-gradient(135deg, #005FFD 0%, #0052d4 100%);
+            color: #fff; font-weight: 700; font-size: 14px;
+            cursor: pointer; transition: all 0.3s;
+            box-shadow: 0 4px 20px rgba(0,95,253,0.3);
+            margin-top: 6px;
+        }
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0,95,253,0.45);
+        }
+        .form-footer {
+            text-align: center; margin-top: 24px;
+            color: rgba(255,255,255,0.3); font-size: 13px;
+        }
+        .form-footer a { color: #00D1FF; text-decoration: none; font-weight: 600; }
+        .form-footer a:hover { text-decoration: underline; }
+        .alert-box {
+            background: rgba(239,68,68,0.08);
+            border: 1px solid rgba(239,68,68,0.15);
+            border-radius: 12px; padding: 12px 16px;
+            color: #FCA5A5; font-size: 13px; margin-bottom: 20px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        @media (max-width: 992px) {
+            .left-panel { display: none; }
+            .right-panel { width: 100%; border: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="left-panel">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+        <div class="left-content">
+            <div class="hero-icon"><i class="bi bi-rocket-takeoff"></i></div>
+            <h2>Kelajak <span>texnologiyalari</span> — yoshlar qo'lida</h2>
+            <p>Yoshlar innovatsiya markazining student portaliga xush kelibsiz</p>
+            <div class="feature-list">
+                <div class="item"><i class="bi bi-check-circle-fill"></i> Ta'lim dasturlarini ko'ring va ariza topshiring</div>
+                <div class="item"><i class="bi bi-check-circle-fill"></i> Loyihalaringizni yarating va ko'rsating</div>
+                <div class="item"><i class="bi bi-check-circle-fill"></i> Sertifikatlaringizni saqlang</div>
+                <div class="item"><i class="bi bi-check-circle-fill"></i> Tadbirlarda qatnashing</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="right-panel">
+        <div class="login-form">
+            <h3 class="form-title">Tizimga kirish</h3>
+            <p class="form-sub">// student.login()</p>
+
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert-box">
+                <i class="bi bi-exclamation-circle"></i> {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="field-group">
+                    <label>Foydalanuvchi nomi</label>
+                    <div class="input-wrap">
+                        <i class="bi bi-person"></i>
+                        <input type="text" name="username" placeholder="username" value="{{ form.username.value|default:'' }}" autofocus>
+                    </div>
+                </div>
+                <div class="field-group">
+                    <label>Parol</label>
+                    <div class="input-wrap">
+                        <i class="bi bi-lock"></i>
+                        <input type="password" name="password" placeholder="••••••••">
+                    </div>
+                </div>
+                <button type="submit" class="btn-submit">
+                    <i class="bi bi-box-arrow-in-right me-2"></i>Kirish
+                </button>
+            </form>
+            <div class="form-footer">
+                Akkauntingiz yo'qmi? <a href="{% url 'register' %}">Ro'yxatdan o'ting</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

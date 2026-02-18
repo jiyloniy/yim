@@ -1,0 +1,139 @@
+{% extends "student/base.html" %}
+
+{% block title %}Arizalarim{% endblock %}
+{% block page_title %}Mening arizalarim{% endblock %}
+
+{% block content %}
+<div class="fade-up">
+    <!-- Status Filter -->
+    <div class="glass-card mb-4">
+        <div class="glass-card-body">
+            <div class="d-flex flex-wrap gap-2">
+                <a href="{% url 'student:my_applications' %}" class="btn-ghost {% if not request.GET.status %}active{% endif %}">
+                    Barchasi
+                </a>
+                <a href="{% url 'student:my_applications' %}?status=pending" class="btn-ghost {% if request.GET.status == 'pending' %}active{% endif %}">
+                    <i class="bi bi-hourglass-split me-1"></i>Kutilmoqda
+                </a>
+                <a href="{% url 'student:my_applications' %}?status=approved" class="btn-ghost {% if request.GET.status == 'approved' %}active{% endif %}">
+                    <i class="bi bi-check-circle me-1"></i>Tasdiqlangan
+                </a>
+                <a href="{% url 'student:my_applications' %}?status=rejected" class="btn-ghost {% if request.GET.status == 'rejected' %}active{% endif %}">
+                    <i class="bi bi-x-circle me-1"></i>Rad etilgan
+                </a>
+            </div>
+        </div>
+    </div>
+
+    {% if applications %}
+    <!-- Desktop Table -->
+    <div class="glass-card d-none d-md-block">
+        <div class="glass-card-body p-0">
+            <table class="dark-table">
+                <thead>
+                    <tr>
+                        <th>Dastur</th>
+                        <th>Holat</th>
+                        <th>Sana</th>
+                        <th style="width: 100px;">Amal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for app in applications %}
+                    <tr>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div style="width: 36px; height: 36px; border-radius: 8px; background: linear-gradient(135deg, var(--primary), var(--purple)); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                    <i class="bi bi-journal-code" style="color: rgba(255,255,255,0.8); font-size: 0.9rem;"></i>
+                                </div>
+                                <span style="color: var(--text-main); font-weight: 500;">{{ app.program.name }}</span>
+                            </div>
+                        </td>
+                        <td>
+                            {% if app.status == "pending" %}
+                                <span class="status-badge status-pending">Kutilmoqda</span>
+                            {% elif app.status == "approved" %}
+                                <span class="status-badge status-approved">Tasdiqlangan</span>
+                            {% elif app.status == "rejected" %}
+                                <span class="status-badge status-rejected">Rad etilgan</span>
+                            {% endif %}
+                        </td>
+                        <td style="color: var(--text-dim);">{{ app.created_at|date:"d.m.Y H:i" }}</td>
+                        <td>
+                            {% if app.status == "pending" %}
+                            <form method="post" action="{% url 'student:cancel_application' app.pk %}" style="display: inline;" onsubmit="return confirm('Arizani bekor qilmoqchimisiz?');">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-sm-icon" title="Bekor qilish" style="color: var(--red);">
+                                    <i class="bi bi-x-lg"></i>
+                                </button>
+                            </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Mobile Cards -->
+    <div class="d-md-none">
+        <div class="row g-3">
+            {% for app in applications %}
+            <div class="col-12">
+                <div class="glass-card">
+                    <div class="glass-card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div class="d-flex align-items-center gap-2">
+                                <div style="width: 40px; height: 40px; border-radius: 10px; background: linear-gradient(135deg, var(--primary), var(--purple)); display: flex; align-items: center; justify-content: center;">
+                                    <i class="bi bi-journal-code" style="color: rgba(255,255,255,0.8);"></i>
+                                </div>
+                                <div>
+                                    <h6 style="color: var(--text-main); margin: 0;">{{ app.program.name }}</h6>
+                                    <small style="color: var(--text-muted);">{{ app.created_at|date:"d.m.Y" }}</small>
+                                </div>
+                            </div>
+                            {% if app.status == "pending" %}
+                                <span class="status-badge status-pending">Kutilmoqda</span>
+                            {% elif app.status == "approved" %}
+                                <span class="status-badge status-approved">Tasdiqlangan</span>
+                            {% elif app.status == "rejected" %}
+                                <span class="status-badge status-rejected">Rad etilgan</span>
+                            {% endif %}
+                        </div>
+                        {% if app.status == "pending" %}
+                        <form method="post" action="{% url 'student:cancel_application' app.pk %}" onsubmit="return confirm('Arizani bekor qilmoqchimisiz?');">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-ghost w-100" style="color: var(--red); border-color: var(--red);">
+                                <i class="bi bi-x-lg me-1"></i>Bekor qilish
+                            </button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% else %}
+    <div class="empty-state fade-up">
+        <div class="empty-icon">
+            <i class="bi bi-inbox"></i>
+        </div>
+        <h5 style="color: var(--text-main);">Arizalar topilmadi</h5>
+        <p style="color: var(--text-dim);">Siz hali hech qanday ariza topshirmagansiz.</p>
+        <a href="{% url 'student:program_list' %}" class="btn-glow mt-3">
+            <i class="bi bi-journal-code me-1"></i>Dasturlarni ko'rish
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+    .btn-ghost.active {
+        background: rgba(0, 95, 253, 0.15);
+        border-color: var(--primary);
+        color: var(--primary);
+    }
+</style>
+{% endblock %}

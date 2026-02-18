@@ -1,0 +1,121 @@
+{% extends "student/base.html" %}
+
+{% block title %}Profil{% endblock %}
+{% block page_title %}Mening profilim{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center fade-up">
+    <div class="col-lg-10">
+        <!-- Profile Header -->
+        <div class="glass-card mb-4">
+            <div class="glass-card-body text-center py-5">
+                <div class="profile-avatar mx-auto mb-3">
+                    {% if user.profile.avatar %}
+                        <img src="{{ user.profile.avatar.url }}" alt="Avatar" class="avatar-img">
+                    {% else %}
+                        <span class="avatar-initial">{{ user.first_name|first|default:user.username|first }}</span>
+                    {% endif %}
+                </div>
+                <h3 style="color: var(--text-main); margin-bottom: 4px;">
+                    {{ user.get_full_name|default:user.username }}
+                </h3>
+                <p style="color: var(--text-dim); margin-bottom: 0;">{{ user.email }}</p>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-4">
+                <div class="stat-mini fade-up">
+                    <div class="icon blue">
+                        <i class="bi bi-file-earmark-text"></i>
+                    </div>
+                    <div>
+                        <div class="stat-value">{{ applications_count|default:"0" }}</div>
+                        <div class="stat-label">Arizalar</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-mini fade-up">
+                    <div class="icon cyan">
+                        <i class="bi bi-award"></i>
+                    </div>
+                    <div>
+                        <div class="stat-value">{{ certificates_count|default:"0" }}</div>
+                        <div class="stat-label">Sertifikatlar</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-mini fade-up">
+                    <div class="icon purple">
+                        <i class="bi bi-rocket-takeoff"></i>
+                    </div>
+                    <div>
+                        <div class="stat-value">{{ projects_count|default:"0" }}</div>
+                        <div class="stat-label">Loyihalar</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Form -->
+        <div class="glass-card fade-up">
+            <div class="glass-card-header">
+                <h5 style="margin: 0; color: var(--text-main);">
+                    <i class="bi bi-pencil-square me-2" style="color: var(--primary);"></i>Profilni tahrirlash
+                </h5>
+            </div>
+            <div class="glass-card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <div class="mb-3">
+                            <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                            {{ field }}
+                            {% if field.help_text %}
+                                <div class="form-text" style="color: var(--text-muted);">{{ field.help_text }}</div>
+                            {% endif %}
+                            {% for error in field.errors %}
+                                <div class="invalid-feedback d-block">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                    <div class="text-end mt-4">
+                        <button type="submit" class="btn-glow">
+                            <i class="bi bi-check-lg me-1"></i>Saqlash
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .profile-avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--primary), var(--purple));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 3px solid var(--dark-border);
+        overflow: hidden;
+        box-shadow: 0 0 30px rgba(0, 95, 253, 0.3);
+    }
+    .profile-avatar .avatar-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .profile-avatar .avatar-initial {
+        font-size: 3rem;
+        font-weight: 700;
+        color: #fff;
+        text-transform: uppercase;
+    }
+</style>
+{% endblock %}

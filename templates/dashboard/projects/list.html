@@ -1,0 +1,118 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Loyihalar{% endblock %}
+{% block page_title %}Loyihalar{% endblock %}
+{% block page_subtitle %}Barcha loyihalarni boshqarish{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+    <div class="search-box">
+        <i class="bi bi-search"></i>
+        <form method="get">
+            <input type="text" class="form-control" name="search" value="{{ search }}" placeholder="Qidirish...">
+        </form>
+    </div>
+    <a href="{% url 'dashboard:project_create' %}" class="btn btn-primary-custom">
+        <i class="bi bi-plus-lg me-2"></i>Yangi loyiha
+    </a>
+</div>
+
+<div class="data-card animate-in">
+    <div class="table-responsive">
+        <table class="table table-modern mb-0">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Rasm</th>
+                    <th>Sarlavha</th>
+                    <th>Muallif</th>
+                    <th>Bosqich</th>
+                    <th>Tasdiqlash</th>
+                    <th>Holat</th>
+                    <th>Amallar</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for project in projects %}
+                <tr>
+                    <td style="font-family: 'JetBrains Mono'; font-size: 12px;">{{ forloop.counter }}</td>
+                    <td>
+                        {% if project.image %}
+                        <img src="{{ project.image.url }}" class="table-img" alt="">
+                        {% else %}
+                        <div class="table-img d-flex align-items-center justify-content-center bg-light"><i class="bi bi-image text-muted"></i></div>
+                        {% endif %}
+                    </td>
+                    <td><strong>{{ project.title }}</strong></td>
+                    <td>{{ project.author|default:"—" }}</td>
+                    <td>
+                        {% if project.stage == 'idea' %}
+                        <span class="badge-status" style="background: rgba(245,158,11,0.12); color: #F59E0B;">G'oya</span>
+                        {% elif project.stage == 'prototype' %}
+                        <span class="badge-status" style="background: rgba(0,95,253,0.12); color: #005FFD;">Prototip</span>
+                        {% elif project.stage == 'mvp' %}
+                        <span class="badge-status" style="background: rgba(16,185,129,0.12); color: #10B981;">MVP</span>
+                        {% else %}
+                        <span class="badge-status">{{ project.get_stage_display }}</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'dashboard:project_toggle_approve' project.pk %}" class="btn-action {% if project.is_approved %}edit{% else %}delete{% endif %}" title="{% if project.is_approved %}Tasdiqni bekor qilish{% else %}Tasdiqlash{% endif %}" style="width:auto; padding: 4px 12px; font-size: 12px; gap: 4px; display: inline-flex; align-items: center;">
+                            {% if project.is_approved %}
+                            <i class="bi bi-check-circle-fill"></i> Tasdiqlangan
+                            {% else %}
+                            <i class="bi bi-clock"></i> Kutilmoqda
+                            {% endif %}
+                        </a>
+                    </td>
+                    <td>
+                        {% if project.is_active %}
+                        <span class="badge-status badge-active">Faol</span>
+                        {% else %}
+                        <span class="badge-status badge-inactive">Nofaol</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="d-flex gap-2">
+                            <a href="{% url 'dashboard:project_edit' project.pk %}" class="btn-action edit" title="Tahrirlash"><i class="bi bi-pencil"></i></a>
+                            <button class="btn-action delete" title="O'chirish" data-bs-toggle="modal" data-bs-target="#deleteModal{{ project.pk }}"><i class="bi bi-trash"></i></button>
+                        </div>
+                        <!-- Delete Modal -->
+                        <div class="modal fade" id="deleteModal{{ project.pk }}" tabindex="-1">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h6 class="modal-title"><i class="bi bi-exclamation-triangle text-danger me-2"></i>O'chirishni tasdiqlang</h6>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <strong>"{{ project.title }}"</strong> loyihasini o'chirmoqchimisiz?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-light" data-bs-dismiss="modal" style="border-radius:10px;">Bekor qilish</button>
+                                        <form method="post" action="{% url 'dashboard:project_delete' project.pk %}">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-danger" style="border-radius:10px;">O'chirish</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan=\"8\">
+                        <div class="empty-state">
+                            <i class="bi bi-lightbulb"></i>
+                            <h5>Loyihalar topilmadi</h5>
+                            <p>Yangi loyiha qo'shish uchun yuqoridagi tugmani bosing</p>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

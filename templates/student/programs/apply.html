@@ -1,0 +1,75 @@
+{% extends "student/base.html" %}
+
+{% block title %}Ariza topshirish{% endblock %}
+{% block page_title %}Ariza topshirish{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center fade-up">
+    <div class="col-lg-8">
+        <!-- Program Info -->
+        <div class="glass-card mb-4">
+            <div class="glass-card-body d-flex align-items-center gap-3">
+                <div style="width: 60px; height: 60px; border-radius: 12px; background: linear-gradient(135deg, var(--primary), var(--purple)); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <i class="bi bi-journal-code" style="font-size: 1.5rem; color: rgba(255,255,255,0.8);"></i>
+                </div>
+                <div>
+                    <h5 style="color: var(--text-main); margin-bottom: 4px;">{{ program.name }}</h5>
+                    <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                        {% if program.level == "beginner" %}
+                            <span class="level-badge beginner">Boshlang'ich</span>
+                        {% elif program.level == "advanced" %}
+                            <span class="level-badge advanced">Ilg'or</span>
+                        {% endif %}
+                        <span style="color: var(--text-muted); font-size: 0.85rem;">
+                            <i class="bi bi-clock me-1"></i>{{ program.duration }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Application Form -->
+        <div class="glass-card">
+            <div class="glass-card-header">
+                <h5 style="margin: 0; color: var(--text-main);">
+                    <i class="bi bi-send me-2" style="color: var(--primary);"></i>Ariza topshirish
+                </h5>
+            </div>
+            <div class="glass-card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <div class="mb-3">
+                            <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                            {{ field }}
+                            {% if field.help_text %}
+                                <div class="form-text" style="color: var(--text-muted);">{{ field.help_text }}</div>
+                            {% endif %}
+                            {% for error in field.errors %}
+                                <div class="invalid-feedback d-block">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+
+                    {% if form.non_field_errors %}
+                        <div class="alert" style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: var(--red); border-radius: 8px; padding: 12px; margin-bottom: 16px;">
+                            {% for error in form.non_field_errors %}
+                                <p class="mb-0">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <a href="{% url 'student:program_detail' program.pk %}" class="btn-ghost">
+                            <i class="bi bi-x-lg me-1"></i>Bekor qilish
+                        </a>
+                        <button type="submit" class="btn-glow">
+                            <i class="bi bi-send me-1"></i>Ariza topshirish
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

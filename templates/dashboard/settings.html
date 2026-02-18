@@ -1,0 +1,154 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Sozlamalar{% endblock %}
+{% block page_title %}Sozlamalar{% endblock %}
+{% block page_subtitle %}Sayt sozlamalarini boshqarish{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-xl-10">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <!-- Umumiy -->
+            <div class="data-card animate-in mb-4">
+                <div class="data-card-header">
+                    <h6><i class="bi bi-gear me-2 text-primary"></i>Umumiy</h6>
+                </div>
+                <div class="data-card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="{{ form.site_name.id_for_label }}">{{ form.site_name.label }}</label>
+                            {{ form.site_name }}
+                            {% if form.site_name.errors %}
+                            <div class="text-danger small mt-1">{{ form.site_name.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="{{ form.slogan.id_for_label }}">{{ form.slogan.label }}</label>
+                            {{ form.slogan }}
+                            {% if form.slogan.errors %}
+                            <div class="text-danger small mt-1">{{ form.slogan.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="{{ form.site_logo.id_for_label }}">{{ form.site_logo.label }}</label>
+                            {{ form.site_logo }}
+                            {% if form.site_logo.errors %}
+                            <div class="text-danger small mt-1">{{ form.site_logo.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="{{ form.site_favicon.id_for_label }}">{{ form.site_favicon.label }}</label>
+                            {{ form.site_favicon }}
+                            {% if form.site_favicon.errors %}
+                            <div class="text-danger small mt-1">{{ form.site_favicon.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Aloqa -->
+            <div class="data-card animate-in mb-4">
+                <div class="data-card-header">
+                    <h6><i class="bi bi-telephone me-2 text-primary"></i>Aloqa</h6>
+                </div>
+                <div class="data-card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="{{ form.phone.id_for_label }}">{{ form.phone.label }}</label>
+                            {{ form.phone }}
+                            {% if form.phone.errors %}
+                            <div class="text-danger small mt-1">{{ form.phone.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+                            {{ form.email }}
+                            {% if form.email.errors %}
+                            <div class="text-danger small mt-1">{{ form.email.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="{{ form.address.id_for_label }}">{{ form.address.label }}</label>
+                            {{ form.address }}
+                            {% if form.address.errors %}
+                            <div class="text-danger small mt-1">{{ form.address.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="{{ form.working_hours.id_for_label }}">{{ form.working_hours.label }}</label>
+                            {{ form.working_hours }}
+                            {% if form.working_hours.errors %}
+                            <div class="text-danger small mt-1">{{ form.working_hours.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ijtimoiy tarmoqlar -->
+            <div class="data-card animate-in mb-4">
+                <div class="data-card-header">
+                    <h6><i class="bi bi-share me-2 text-primary"></i>Ijtimoiy tarmoqlar</h6>
+                </div>
+                <div class="data-card-body">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label" for="{{ form.telegram_link.id_for_label }}">{{ form.telegram_link.label }}</label>
+                            {{ form.telegram_link }}
+                            {% if form.telegram_link.errors %}
+                            <div class="text-danger small mt-1">{{ form.telegram_link.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label" for="{{ form.instagram_link.id_for_label }}">{{ form.instagram_link.label }}</label>
+                            {{ form.instagram_link }}
+                            {% if form.instagram_link.errors %}
+                            <div class="text-danger small mt-1">{{ form.instagram_link.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label" for="{{ form.youtube_link.id_for_label }}">{{ form.youtube_link.label }}</label>
+                            {{ form.youtube_link }}
+                            {% if form.youtube_link.errors %}
+                            <div class="text-danger small mt-1">{{ form.youtube_link.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Qo'shimcha -->
+            <div class="data-card animate-in mb-4">
+                <div class="data-card-header">
+                    <h6><i class="bi bi-info-circle me-2 text-primary"></i>Qo'shimcha</h6>
+                </div>
+                <div class="data-card-body">
+                    <div class="mb-3">
+                        <label class="form-label" for="{{ form.about_text.id_for_label }}">{{ form.about_text.label }}</label>
+                        {{ form.about_text }}
+                        {% if form.about_text.errors %}
+                        <div class="text-danger small mt-1">{{ form.about_text.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="{{ form.map_embed.id_for_label }}">{{ form.map_embed.label }}</label>
+                        {{ form.map_embed }}
+                        {% if form.map_embed.errors %}
+                        <div class="text-danger small mt-1">{{ form.map_embed.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-end mb-4">
+                <button type="submit" class="btn btn-primary-custom">
+                    <i class="bi bi-check-lg me-2"></i>Saqlash
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

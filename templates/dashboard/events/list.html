@@ -1,0 +1,112 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Tadbirlar{% endblock %}
+{% block page_title %}Tadbirlar{% endblock %}
+{% block page_subtitle %}Barcha tadbirlarni boshqarish{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+    <div class="search-box">
+        <i class="bi bi-search"></i>
+        <form method="get">
+            <input type="text" class="form-control" name="search" value="{{ search }}" placeholder="Qidirish...">
+        </form>
+    </div>
+    <a href="{% url 'dashboard:event_create' %}" class="btn btn-primary-custom">
+        <i class="bi bi-plus-lg me-2"></i>Yangi tadbir
+    </a>
+</div>
+
+<div class="data-card animate-in">
+    <div class="table-responsive">
+        <table class="table table-modern mb-0">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Rasm</th>
+                    <th>Sarlavha</th>
+                    <th>Turi</th>
+                    <th>Sana</th>
+                    <th>Joy</th>
+                    <th>Holat</th>
+                    <th>Amallar</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for event in events %}
+                <tr>
+                    <td style="font-family: 'JetBrains Mono'; font-size: 12px;">{{ forloop.counter }}</td>
+                    <td>
+                        {% if event.image %}
+                        <img src="{{ event.image.url }}" class="table-img" alt="">
+                        {% else %}
+                        <div class="table-img d-flex align-items-center justify-content-center bg-light"><i class="bi bi-image text-muted"></i></div>
+                        {% endif %}
+                    </td>
+                    <td><strong>{{ event.title }}</strong></td>
+                    <td>
+                        {% if event.event_type == 'masterclass' %}
+                        <span class="badge-status" style="background: rgba(0,95,253,0.12); color: #005FFD;">Masterclass</span>
+                        {% elif event.event_type == 'hackathon' %}
+                        <span class="badge-status" style="background: rgba(176,0,255,0.12); color: #B000FF;">Hackathon</span>
+                        {% elif event.event_type == 'lecture' %}
+                        <span class="badge-status" style="background: rgba(16,185,129,0.12); color: #10B981;">Lecture</span>
+                        {% elif event.event_type == 'competition' %}
+                        <span class="badge-status" style="background: rgba(245,158,11,0.12); color: #F59E0B;">Competition</span>
+                        {% else %}
+                        <span class="badge-status">{{ event.get_event_type_display }}</span>
+                        {% endif %}
+                    </td>
+                    <td style="font-family: 'JetBrains Mono'; font-size: 12px;">{{ event.date|date:"d.m.Y H:i" }}</td>
+                    <td>{{ event.location }}</td>
+                    <td>
+                        {% if event.is_active %}
+                        <span class="badge-status badge-active">Faol</span>
+                        {% else %}
+                        <span class="badge-status badge-inactive">Nofaol</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="d-flex gap-2">
+                            <a href="{% url 'dashboard:event_edit' event.pk %}" class="btn-action edit" title="Tahrirlash"><i class="bi bi-pencil"></i></a>
+                            <button class="btn-action delete" title="O'chirish" data-bs-toggle="modal" data-bs-target="#deleteModal{{ event.pk }}"><i class="bi bi-trash"></i></button>
+                        </div>
+                        <!-- Delete Modal -->
+                        <div class="modal fade" id="deleteModal{{ event.pk }}" tabindex="-1">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h6 class="modal-title"><i class="bi bi-exclamation-triangle text-danger me-2"></i>O'chirishni tasdiqlang</h6>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <strong>"{{ event.title }}"</strong> tadbirini o'chirmoqchimisiz?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-light" data-bs-dismiss="modal" style="border-radius:10px;">Bekor qilish</button>
+                                        <form method="post" action="{% url 'dashboard:event_delete' event.pk %}">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-danger" style="border-radius:10px;">O'chirish</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8">
+                        <div class="empty-state">
+                            <i class="bi bi-calendar-event"></i>
+                            <h5>Tadbirlar topilmadi</h5>
+                            <p>Yangi tadbir qo'shish uchun yuqoridagi tugmani bosing</p>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

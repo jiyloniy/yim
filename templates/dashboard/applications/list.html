@@ -1,0 +1,131 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Arizalar{% endblock %}
+{% block page_title %}Arizalar{% endblock %}
+{% block page_subtitle %}Barcha arizalarni boshqarish{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+    <div class="d-flex gap-3 align-items-center flex-wrap">
+        <div class="search-box">
+            <i class="bi bi-search"></i>
+            <form method="get">
+                <input type="text" class="form-control" name="search" value="{{ search }}" placeholder="Qidirish...">
+                {% if status_filter %}
+                <input type="hidden" name="status" value="{{ status_filter }}">
+                {% endif %}
+            </form>
+        </div>
+        <div class="dropdown">
+            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" style="border-radius: 10px; font-size: 14px;">
+                <i class="bi bi-funnel me-1"></i>
+                {% if status_filter == 'pending' %}Kutilmoqda
+                {% elif status_filter == 'approved' %}Tasdiqlangan
+                {% elif status_filter == 'rejected' %}Rad etilgan
+                {% else %}Barchasi{% endif %}
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{% url 'dashboard:application_list' %}">Barchasi</a></li>
+                <li><a class="dropdown-item" href="{% url 'dashboard:application_list' %}?status=pending">Kutilmoqda</a></li>
+                <li><a class="dropdown-item" href="{% url 'dashboard:application_list' %}?status=approved">Tasdiqlangan</a></li>
+                <li><a class="dropdown-item" href="{% url 'dashboard:application_list' %}?status=rejected">Rad etilgan</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="data-card animate-in">
+    <div class="table-responsive">
+        <table class="table table-modern mb-0">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Foydalanuvchi</th>
+                    <th>Dastur</th>
+                    <th>Xabar</th>
+                    <th>Holat</th>
+                    <th>Sana</th>
+                    <th>Amallar</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for application in applications %}
+                <tr>
+                    <td style="font-family: 'JetBrains Mono'; font-size: 12px;">{{ forloop.counter }}</td>
+                    <td>
+                        <div class="d-flex align-items-center gap-2">
+                            {% if application.user.avatar %}
+                            <img src="{{ application.user.avatar.url }}" alt="" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
+                            {% else %}
+                            <div style="width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--neon-cyan)); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 13px; font-weight: 600;">
+                                {{ application.user.get_full_name|default:application.user.username|first|upper }}
+                            </div>
+                            {% endif %}
+                            <span>{{ application.user.get_full_name|default:application.user.username }}</span>
+                        </div>
+                    </td>
+                    <td>{{ application.program }}</td>
+                    <td>
+                        <span title="{{ application.message }}">{{ application.message|truncatewords:8 }}</span>
+                    </td>
+                    <td>
+                        {% if application.status == 'pending' %}
+                        <span class="badge-status" style="background: rgba(245,158,11,0.12); color: #F59E0B;">Kutilmoqda</span>
+                        {% elif application.status == 'approved' %}
+                        <span class="badge-status badge-active">Tasdiqlangan</span>
+                        {% elif application.status == 'rejected' %}
+                        <span class="badge-status" style="background: rgba(239,68,68,0.12); color: #EF4444;">Rad etilgan</span>
+                        {% endif %}
+                    </td>
+                    <td style="font-family: 'JetBrains Mono'; font-size: 12px;">{{ application.created_at|date:"d.m.Y H:i" }}</td>
+                    <td>
+                        <div class="d-flex gap-2 align-items-center">
+                            <form method="post" action="{% url 'dashboard:application_status' application.pk %}" class="d-inline">
+                                {% csrf_token %}
+                                <select name="status" class="form-select form-select-sm" onchange="this.form.submit()" style="border-radius: 8px; font-size: 12px; width: auto;">
+                                    <option value="pending" {% if application.status == 'pending' %}selected{% endif %}>Kutilmoqda</option>
+                                    <option value="approved" {% if application.status == 'approved' %}selected{% endif %}>Tasdiqlangan</option>
+                                    <option value="rejected" {% if application.status == 'rejected' %}selected{% endif %}>Rad etilgan</option>
+                                </select>
+                            </form>
+                            <button class="btn-action delete" title="O'chirish" data-bs-toggle="modal" data-bs-target="#deleteModal{{ application.pk }}"><i class="bi bi-trash"></i></button>
+                        </div>
+                        <!-- Delete Modal -->
+                        <div class="modal fade" id="deleteModal{{ application.pk }}" tabindex="-1">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h6 class="modal-title"><i class="bi bi-exclamation-triangle text-danger me-2"></i>O'chirishni tasdiqlang</h6>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <strong>"{{ application.user.get_full_name|default:application.user.username }}"</strong> arizasini o'chirmoqchimisiz?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-light" data-bs-dismiss="modal" style="border-radius:10px;">Bekor qilish</button>
+                                        <form method="post" action="{% url 'dashboard:application_delete' application.pk %}">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-danger" style="border-radius:10px;">O'chirish</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7">
+                        <div class="empty-state">
+                            <i class="bi bi-inbox"></i>
+                            <h5>Arizalar topilmadi</h5>
+                            <p>Hozircha hech qanday ariza topilmadi</p>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

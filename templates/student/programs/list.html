@@ -1,0 +1,107 @@
+{% extends "student/base.html" %}
+
+{% block title %}Dasturlar{% endblock %}
+{% block page_title %}Ta'lim dasturlari{% endblock %}
+
+{% block content %}
+<!-- Filter Bar -->
+<div class="glass-card mb-4 fade-up">
+    <div class="glass-card-body">
+        <form method="get" class="row g-3 align-items-end">
+            <div class="col-lg-4 col-md-6">
+                <label class="form-label">Qidirish</label>
+                <div style="position: relative;">
+                    <i class="bi bi-search" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
+                    <input type="text" name="q" value="{{ request.GET.q }}" class="form-control" placeholder="Dastur nomini qidirish..." style="padding-left: 36px;">
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-6">
+                <label class="form-label">Daraja</label>
+                <select name="level" class="form-select">
+                    <option value="">Barchasi</option>
+                    <option value="beginner" {% if request.GET.level == "beginner" %}selected{% endif %}>Boshlang'ich</option>
+                    <option value="advanced" {% if request.GET.level == "advanced" %}selected{% endif %}>Ilg'or</option>
+                </select>
+            </div>
+            <div class="col-lg-2 col-md-6">
+                <label class="form-label">Format</label>
+                <select name="format" class="form-select">
+                    <option value="">Barchasi</option>
+                    <option value="offline" {% if request.GET.format == "offline" %}selected{% endif %}>Offline</option>
+                    <option value="online" {% if request.GET.format == "online" %}selected{% endif %}>Online</option>
+                    <option value="hybrid" {% if request.GET.format == "hybrid" %}selected{% endif %}>Gibrid</option>
+                </select>
+            </div>
+            <div class="col-lg-2 col-md-6">
+                <label class="form-label">Laboratoriya</label>
+                <select name="lab" class="form-select">
+                    <option value="">Barchasi</option>
+                    {% for lab in labs %}
+                        <option value="{{ lab.pk }}" {% if request.GET.lab == lab.pk|stringformat:"d" %}selected{% endif %}>{{ lab.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-lg-2 col-md-6">
+                <button type="submit" class="btn-glow w-100">
+                    <i class="bi bi-funnel me-1"></i>Filtrlash
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Programs Grid -->
+{% if programs %}
+<div class="row g-4">
+    {% for program in programs %}
+    <div class="col-xl-4 col-md-6 fade-up" style="animation-delay: {{ forloop.counter0|floatformat:"0" }}00ms;">
+        <a href="{% url 'student:program_detail' program.pk %}" style="text-decoration: none;">
+            <div class="program-card">
+                <div class="card-img">
+                    {% if program.image %}
+                        <img src="{{ program.image.url }}" alt="{{ program.name }}">
+                    {% else %}
+                        <div style="height: 100%; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--primary), var(--purple));">
+                            <i class="bi bi-journal-code" style="font-size: 3rem; color: rgba(255,255,255,0.5);"></i>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="card-content">
+                    <div class="mb-2">
+                        {% if program.level == "beginner" %}
+                            <span class="level-badge beginner">Boshlang'ich</span>
+                        {% elif program.level == "advanced" %}
+                            <span class="level-badge advanced">Ilg'or</span>
+                        {% endif %}
+                    </div>
+                    <h5 class="card-title">{{ program.name }}</h5>
+                    <p class="card-desc">{{ program.description|truncatewords:15 }}</p>
+                    <div class="card-meta">
+                        <span class="meta-item">
+                            <i class="bi bi-display"></i> {{ program.get_format_display|default:program.format }}
+                        </span>
+                        <span class="meta-item">
+                            <i class="bi bi-clock"></i> {{ program.duration }}
+                        </span>
+                        {% if program.age_range %}
+                        <span class="meta-item">
+                            <i class="bi bi-people"></i> {{ program.age_range }}
+                        </span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state fade-up">
+    <div class="empty-icon">
+        <i class="bi bi-journal-x"></i>
+    </div>
+    <h5 style="color: var(--text-main);">Dasturlar topilmadi</h5>
+    <p style="color: var(--text-dim);">Hozircha hech qanday dastur mavjud emas yoki filtr natijasi bo'sh.</p>
+</div>
+{% endif %}
+{% endblock %}

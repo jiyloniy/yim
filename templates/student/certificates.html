@@ -1,0 +1,139 @@
+{% extends "student/base.html" %}
+
+{% block title %}Sertifikatlarim{% endblock %}
+{% block page_title %}Mening sertifikatlarim{% endblock %}
+
+{% block content %}
+{% if certificates %}
+<div class="row g-4">
+    {% for cert in certificates %}
+    <div class="col-lg-6 fade-up" style="animation-delay: {{ forloop.counter0 }}00ms;">
+        <div class="certificate-card">
+            <div class="cert-glow"></div>
+            <div class="cert-content">
+                <div class="d-flex align-items-start justify-content-between mb-3">
+                    <div class="cert-icon">
+                        <i class="bi bi-award"></i>
+                    </div>
+                    {% if cert.pdf_file %}
+                    <a href="{{ cert.pdf_file.url }}" target="_blank" class="btn-sm-icon" title="PDF yuklab olish" style="color: var(--green);">
+                        <i class="bi bi-download"></i>
+                    </a>
+                    {% endif %}
+                </div>
+
+                <h5 class="cert-title">{{ cert.title }}</h5>
+
+                {% if cert.program %}
+                <div class="cert-program">
+                    <i class="bi bi-journal-code me-1"></i>{{ cert.program.name }}
+                </div>
+                {% endif %}
+
+                <div class="cert-meta">
+                    <div class="cert-id">
+                        <span style="color: var(--text-muted); font-size: 0.75rem;">Sertifikat ID</span>
+                        <span class="cert-id-value">{{ cert.certificate_id }}</span>
+                    </div>
+                    <div class="cert-date">
+                        <span style="color: var(--text-muted); font-size: 0.75rem;">Berilgan sana</span>
+                        <span style="color: var(--text-main); font-size: 0.9rem;">{{ cert.issued_date|date:"d.m.Y" }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state fade-up">
+    <div class="empty-icon">
+        <i class="bi bi-award"></i>
+    </div>
+    <h5 style="color: var(--text-main);">Sertifikatlar topilmadi</h5>
+    <p style="color: var(--text-dim);">Sizga hali hech qanday sertifikat berilmagan.</p>
+</div>
+{% endif %}
+
+<style>
+    .certificate-card {
+        position: relative;
+        background: var(--dark-card);
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid transparent;
+        background-clip: padding-box;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .certificate-card::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 16px;
+        padding: 1px;
+        background: linear-gradient(135deg, var(--primary), var(--purple), var(--neon-cyan));
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        pointer-events: none;
+    }
+    .certificate-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 40px rgba(0, 95, 253, 0.15);
+    }
+    .cert-glow {
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200px;
+        height: 200px;
+        background: radial-gradient(circle, rgba(0, 209, 255, 0.06) 0%, transparent 70%);
+        pointer-events: none;
+    }
+    .cert-content {
+        position: relative;
+        padding: 24px;
+    }
+    .cert-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, rgba(0, 95, 253, 0.15), rgba(176, 0, 255, 0.15));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.4rem;
+        color: var(--neon-cyan);
+    }
+    .cert-title {
+        color: var(--text-main);
+        font-weight: 600;
+        margin-bottom: 6px;
+    }
+    .cert-program {
+        color: var(--text-dim);
+        font-size: 0.9rem;
+        margin-bottom: 16px;
+    }
+    .cert-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        padding-top: 16px;
+        border-top: 1px solid var(--dark-border);
+    }
+    .cert-id,
+    .cert-date {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+    .cert-id-value {
+        font-family: 'JetBrains Mono', monospace;
+        color: var(--neon-cyan);
+        font-size: 0.85rem;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+    }
+</style>
+{% endblock %}

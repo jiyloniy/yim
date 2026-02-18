@@ -1,0 +1,181 @@
+{% extends "student/base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+{% block page_sub %}// xush kelibsiz, {{ request.user.get_full_name|default:request.user.username }}{% endblock %}
+
+{% block content %}
+<!-- Stats -->
+<div class="row g-3 mb-4">
+    <div class="col-xl-3 col-sm-6 fade-up">
+        <div class="stat-mini">
+            <div class="icon blue"><i class="bi bi-inbox-fill"></i></div>
+            <div class="value">{{ total_applications }}</div>
+            <div class="label">Jami arizalarim</div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-sm-6 fade-up">
+        <div class="stat-mini">
+            <div class="icon green"><i class="bi bi-check-circle-fill"></i></div>
+            <div class="value">{{ approved_applications }}</div>
+            <div class="label">Tasdiqlangan</div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-sm-6 fade-up">
+        <div class="stat-mini">
+            <div class="icon purple"><i class="bi bi-award-fill"></i></div>
+            <div class="value">{{ total_certificates }}</div>
+            <div class="label">Sertifikatlarim</div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-sm-6 fade-up">
+        <div class="stat-mini">
+            <div class="icon cyan"><i class="bi bi-lightbulb-fill"></i></div>
+            <div class="value">{{ total_projects }}</div>
+            <div class="label">Loyihalarim</div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <!-- Active Programs -->
+    <div class="col-xl-8 fade-up">
+        <div class="glass-card">
+            <div class="glass-card-header">
+                <h6><i class="bi bi-journal-code me-2" style="color: var(--primary);"></i>Mavjud dasturlar</h6>
+                <a href="{% url 'student:program_list' %}" class="btn-ghost" style="padding:5px 14px;font-size:12px;">
+                    Barchasi <i class="bi bi-arrow-right ms-1"></i>
+                </a>
+            </div>
+            <div class="glass-card-body p-0">
+                {% for program in active_programs %}
+                <div class="d-flex align-items-center gap-3 px-3 py-3 {% if not forloop.last %}border-bottom{% endif %}" style="border-color: var(--dark-border) !important;">
+                    <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,rgba(0,95,253,0.12),rgba(0,209,255,0.08));display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                        {% if program.image %}
+                        <img src="{{ program.image.url }}" style="width:100%;height:100%;border-radius:12px;object-fit:cover;" alt="">
+                        {% else %}
+                        <i class="bi bi-journal-code" style="font-size:18px;color:var(--primary);"></i>
+                        {% endif %}
+                    </div>
+                    <div class="flex-grow-1">
+                        <div style="font-weight:600;font-size:13.5px;color:#fff;">{{ program.name }}</div>
+                        <div style="font-size:11px;color:var(--text-muted);display:flex;gap:12px;margin-top:2px;">
+                            <span><i class="bi bi-bar-chart me-1"></i>{{ program.get_level_display }}</span>
+                            <span><i class="bi bi-clock me-1"></i>{{ program.duration|default:"—" }}</span>
+                            <span><i class="bi bi-geo me-1"></i>{{ program.get_format_display }}</span>
+                        </div>
+                    </div>
+                    <a href="{% url 'student:program_detail' program.pk %}" class="btn-ghost" style="padding:5px 12px;font-size:11px;">
+                        Ko'rish
+                    </a>
+                </div>
+                {% empty %}
+                <div class="empty-state" style="padding:30px;">
+                    <div class="empty-icon"><i class="bi bi-journal-code"></i></div>
+                    <h5>Dasturlar yo'q</h5>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- My Applications Status -->
+    <div class="col-xl-4 fade-up">
+        <div class="glass-card">
+            <div class="glass-card-header">
+                <h6><i class="bi bi-inbox me-2" style="color: var(--orange);"></i>So'nggi arizalarim</h6>
+                <a href="{% url 'student:my_applications' %}" class="btn-ghost" style="padding:5px 14px;font-size:12px;">Barchasi</a>
+            </div>
+            <div class="glass-card-body p-0">
+                {% for app in my_applications %}
+                <div class="d-flex align-items-center gap-3 px-3 py-3 {% if not forloop.last %}border-bottom{% endif %}" style="border-color: var(--dark-border) !important;">
+                    <div class="flex-grow-1">
+                        <div style="font-weight:600;font-size:12.5px;color:#fff;">{{ app.program.name|truncatechars:22 }}</div>
+                        <div style="font-size:10px;color:var(--text-muted);font-family:'JetBrains Mono';margin-top:2px;">{{ app.created_at|date:"d.m.Y" }}</div>
+                    </div>
+                    <span class="status-badge status-{{ app.status }}">
+                        {% if app.status == 'pending' %}Kutilmoqda
+                        {% elif app.status == 'approved' %}Tasdiqlangan
+                        {% else %}Rad etilgan{% endif %}
+                    </span>
+                </div>
+                {% empty %}
+                <div class="empty-state" style="padding:30px;">
+                    <div class="empty-icon"><i class="bi bi-inbox"></i></div>
+                    <p>Arizalar yo'q</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Events & News Row -->
+<div class="row g-3 mt-0">
+    <!-- Upcoming Events -->
+    <div class="col-xl-6 fade-up">
+        <div class="glass-card">
+            <div class="glass-card-header">
+                <h6><i class="bi bi-calendar-event me-2" style="color: var(--neon-cyan);"></i>Kelgusi tadbirlar</h6>
+                <a href="{% url 'student:event_list' %}" class="btn-ghost" style="padding:5px 14px;font-size:12px;">Barchasi</a>
+            </div>
+            <div class="glass-card-body" style="padding:14px 18px;">
+                {% for event in upcoming_events %}
+                <a href="{% url 'student:event_detail' event.pk %}" class="event-card mb-2" style="text-decoration:none;">
+                    <div class="event-date-box">
+                        <div class="day">{{ event.date|date:"d" }}</div>
+                        <div class="month">{{ event.date|date:"M" }}</div>
+                    </div>
+                    <div class="event-info">
+                        <div class="event-title">{{ event.title|truncatechars:35 }}</div>
+                        <div class="event-meta">
+                            <span class="event-type-badge type-{{ event.event_type }}">{{ event.get_event_type_display }}</span>
+                            {% if event.location %}<span><i class="bi bi-geo-alt me-1"></i>{{ event.location|truncatechars:20 }}</span>{% endif %}
+                        </div>
+                    </div>
+                </a>
+                {% empty %}
+                <div class="empty-state" style="padding:20px;">
+                    <div class="empty-icon"><i class="bi bi-calendar"></i></div>
+                    <p>Tadbirlar yo'q</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Latest News -->
+    <div class="col-xl-6 fade-up">
+        <div class="glass-card">
+            <div class="glass-card-header">
+                <h6><i class="bi bi-newspaper me-2" style="color: var(--lime);"></i>So'nggi yangiliklar</h6>
+                <a href="{% url 'student:news_list' %}" class="btn-ghost" style="padding:5px 14px;font-size:12px;">Barchasi</a>
+            </div>
+            <div class="glass-card-body p-0">
+                {% for news in latest_news %}
+                <a href="{% url 'student:news_detail' news.slug %}" class="d-flex align-items-center gap-3 px-3 py-3 {% if not forloop.last %}border-bottom{% endif %}" style="border-color:var(--dark-border)!important;text-decoration:none;transition:background 0.15s;">
+                    <div style="width:50px;height:50px;border-radius:12px;overflow:hidden;flex-shrink:0;background:var(--dark);display:flex;align-items:center;justify-content:center;">
+                        {% if news.image %}
+                        <img src="{{ news.image.url }}" style="width:100%;height:100%;object-fit:cover;" alt="">
+                        {% else %}
+                        <i class="bi bi-newspaper" style="font-size:20px;color:var(--dark-border);"></i>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <div style="font-weight:600;font-size:13px;color:#fff;">{{ news.title|truncatechars:40 }}</div>
+                        <div style="font-size:10px;color:var(--text-muted);font-family:'JetBrains Mono';margin-top:3px;">
+                            <i class="bi bi-clock me-1"></i>{{ news.created_at|date:"d.m.Y" }}
+                        </div>
+                    </div>
+                </a>
+                {% empty %}
+                <div class="empty-state" style="padding:30px;">
+                    <div class="empty-icon"><i class="bi bi-newspaper"></i></div>
+                    <p>Yangiliklar yo'q</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

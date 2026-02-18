@@ -1,0 +1,70 @@
+{% extends "student/base.html" %}
+
+{% block title %}Laboratoriyalar{% endblock %}
+{% block page_title %}Laboratoriyalar{% endblock %}
+
+{% block content %}
+{% if laboratories %}
+<div class="row g-4">
+    {% for lab in laboratories %}
+    <div class="col-xl-4 col-md-6 fade-up" style="animation-delay: {{ forloop.counter0 }}00ms;">
+        <div class="glass-card lab-card">
+            <div class="glass-card-body text-center py-4">
+                <div class="lab-icon-wrap mx-auto mb-3">
+                    {% if lab.image %}
+                        <img src="{{ lab.image.url }}" alt="{{ lab.name }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                    {% else %}
+                        <i class="bi bi-cpu" style="font-size: 2.5rem; color: var(--neon-cyan);"></i>
+                    {% endif %}
+                </div>
+                <h5 style="color: var(--text-main); margin-bottom: 8px;">{{ lab.name }}</h5>
+                <p class="lab-description" style="color: var(--text-dim); font-size: 0.9rem; margin: 0;">
+                    {{ lab.description|truncatewords:25 }}
+                </p>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state fade-up">
+    <div class="empty-icon">
+        <i class="bi bi-building"></i>
+    </div>
+    <h5 style="color: var(--text-main);">Laboratoriyalar topilmadi</h5>
+    <p style="color: var(--text-dim);">Hozircha hech qanday laboratoriya mavjud emas.</p>
+</div>
+{% endif %}
+
+<style>
+    .lab-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        cursor: default;
+    }
+    .lab-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 12px 40px rgba(0, 95, 253, 0.15);
+    }
+    .lab-icon-wrap {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: rgba(0, 209, 255, 0.08);
+        border: 2px solid var(--dark-border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        transition: border-color 0.3s ease;
+    }
+    .lab-card:hover .lab-icon-wrap {
+        border-color: var(--neon-cyan);
+    }
+    .lab-description {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+</style>
+{% endblock %}

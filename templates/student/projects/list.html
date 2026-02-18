@@ -1,0 +1,82 @@
+{% extends "student/base.html" %}
+
+{% block title %}Loyihalarim{% endblock %}
+{% block page_title %}Mening loyihalarim{% endblock %}
+
+{% block content %}
+<div class="fade-up">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div></div>
+        <a href="{% url 'student:project_create' %}" class="btn-glow">
+            <i class="bi bi-plus-lg me-1"></i>Yangi loyiha
+        </a>
+    </div>
+
+    {% if projects %}
+    <div class="row g-4">
+        {% for project in projects %}
+        <div class="col-xl-4 col-md-6 fade-up" style="animation-delay: {{ forloop.counter0 }}00ms;">
+            <div class="glass-card project-card h-100">
+                <div class="card-img" style="height: 180px; overflow: hidden;">
+                    {% if project.image %}
+                        <img src="{{ project.image.url }}" alt="{{ project.title }}" style="width: 100%; height: 100%; object-fit: cover;">
+                    {% else %}
+                        <div style="height: 100%; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--purple), var(--primary));">
+                            <i class="bi bi-rocket-takeoff" style="font-size: 3rem; color: rgba(255,255,255,0.3);"></i>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="glass-card-body d-flex flex-column">
+                    <div class="mb-2">
+                        {% if project.stage == "idea" %}
+                            <span class="status-badge stage-idea">G'oya</span>
+                        {% elif project.stage == "prototype" %}
+                            <span class="status-badge stage-prototype">Prototip</span>
+                        {% elif project.stage == "mvp" %}
+                            <span class="status-badge stage-mvp">MVP</span>
+                        {% endif %}
+                    </div>
+                    <h5 style="color: var(--text-main); margin-bottom: 8px;">{{ project.title }}</h5>
+                    <p style="color: var(--text-dim); font-size: 0.9rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; flex-grow: 1;">
+                        {{ project.description|truncatewords:20 }}
+                    </p>
+                    {% if project.team_members %}
+                    <div style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 12px;">
+                        <i class="bi bi-people me-1"></i>{{ project.team_members }}
+                    </div>
+                    {% endif %}
+                    <div class="mt-auto">
+                        <a href="{% url 'student:project_edit' project.pk %}" class="btn-ghost w-100">
+                            <i class="bi bi-pencil me-1"></i>Tahrirlash
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state fade-up">
+        <div class="empty-icon">
+            <i class="bi bi-rocket"></i>
+        </div>
+        <h5 style="color: var(--text-main);">Loyihalar topilmadi</h5>
+        <p style="color: var(--text-dim);">Siz hali hech qanday loyiha qo'shmagansiz.</p>
+        <a href="{% url 'student:project_create' %}" class="btn-glow mt-3">
+            <i class="bi bi-plus-lg me-1"></i>Yangi loyiha yaratish
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+    .project-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .project-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 40px rgba(176, 0, 255, 0.12);
+    }
+</style>
+{% endblock %}

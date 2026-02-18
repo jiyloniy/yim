@@ -1,0 +1,126 @@
+{% extends "student/base.html" %}
+
+{% block title %}{{ event.title }}{% endblock %}
+{% block page_title %}{{ event.title }}{% endblock %}
+
+{% block content %}
+<div class="fade-up">
+    <!-- Back Button -->
+    <div class="mb-4">
+        <a href="{% url 'student:event_list' %}" class="btn-ghost">
+            <i class="bi bi-arrow-left me-1"></i>Tadbirlarga qaytish
+        </a>
+    </div>
+
+    <!-- Event Banner -->
+    <div class="glass-card mb-4 overflow-hidden">
+        {% if event.image %}
+            <img src="{{ event.image.url }}" alt="{{ event.title }}" style="width: 100%; height: 350px; object-fit: cover; display: block;">
+        {% else %}
+            <div style="height: 300px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--neon-cyan), var(--primary));">
+                <i class="bi bi-calendar-event" style="font-size: 5rem; color: rgba(255,255,255,0.25);"></i>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="row g-4">
+        <!-- Main Content -->
+        <div class="col-lg-8">
+            <div class="glass-card">
+                <div class="glass-card-body">
+                    <div class="mb-3">
+                        {% if event.event_type == "masterclass" %}
+                            <span class="event-type-badge type-masterclass">Master-klass</span>
+                        {% elif event.event_type == "hackathon" %}
+                            <span class="event-type-badge type-hackathon">Xakaton</span>
+                        {% elif event.event_type == "lecture" %}
+                            <span class="event-type-badge type-lecture">Ma'ruza</span>
+                        {% elif event.event_type == "competition" %}
+                            <span class="event-type-badge type-competition">Tanlov</span>
+                        {% endif %}
+                    </div>
+
+                    <h2 style="color: var(--text-main); margin-bottom: 20px;">{{ event.title }}</h2>
+
+                    <div style="color: var(--text-dim); line-height: 1.8; font-size: 1rem;">
+                        {{ event.description|linebreaksbr }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <div class="glass-card">
+                <div class="glass-card-header">
+                    <h6 style="margin: 0; color: var(--text-main);">
+                        <i class="bi bi-info-circle me-2" style="color: var(--neon-cyan);"></i>Tadbir ma'lumotlari
+                    </h6>
+                </div>
+                <div class="glass-card-body">
+                    <div class="event-detail-list">
+                        {% if event.date %}
+                        <div class="event-detail-item">
+                            <div class="event-detail-icon" style="background: rgba(0, 95, 253, 0.1); color: var(--primary);">
+                                <i class="bi bi-calendar3"></i>
+                            </div>
+                            <div>
+                                <div style="color: var(--text-muted); font-size: 0.8rem;">Sana</div>
+                                <div style="color: var(--text-main); font-weight: 500;">{{ event.date|date:"d F, Y" }}</div>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if event.time %}
+                        <div class="event-detail-item">
+                            <div class="event-detail-icon" style="background: rgba(0, 209, 255, 0.1); color: var(--neon-cyan);">
+                                <i class="bi bi-clock"></i>
+                            </div>
+                            <div>
+                                <div style="color: var(--text-muted); font-size: 0.8rem;">Vaqt</div>
+                                <div style="color: var(--text-main); font-weight: 500;">{{ event.time|time:"H:i" }}</div>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if event.location %}
+                        <div class="event-detail-item">
+                            <div class="event-detail-icon" style="background: rgba(16, 185, 129, 0.1); color: var(--green);">
+                                <i class="bi bi-geo-alt"></i>
+                            </div>
+                            <div>
+                                <div style="color: var(--text-muted); font-size: 0.8rem;">Manzil</div>
+                                <div style="color: var(--text-main); font-weight: 500;">{{ event.location }}</div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .event-detail-list {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+    .event-detail-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .event-detail-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        flex-shrink: 0;
+    }
+</style>
+{% endblock %}

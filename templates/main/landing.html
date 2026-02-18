@@ -1,0 +1,2803 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ site.site_name }} — {{ site.slogan }}</title>
+    <meta name="description" content="{{ site.slogan }}">
+    <link rel="icon" type="image/svg+xml" href="{% if site.site_favicon %}{{ site.site_favicon.url }}{% else %}{% static 'favicon.svg' %}{% endif %}">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <!-- AOS Animations -->
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+    <style>
+        /* ============================================
+           CSS CUSTOM PROPERTIES
+           ============================================ */
+        :root {
+            --primary: #0052FF;
+            --primary-light: #3D7AFF;
+            --primary-dark: #003ACC;
+            --secondary: #00C2FF;
+            --accent: #6C3AED;
+            --accent-light: #8B5CF6;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --dark: #0F172A;
+            --dark-2: #1E293B;
+            --dark-3: #334155;
+            --gray-50: #F8FAFC;
+            --gray-100: #F1F5F9;
+            --gray-200: #E2E8F0;
+            --gray-300: #CBD5E1;
+            --gray-400: #94A3B8;
+            --gray-500: #64748B;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --white: #FFFFFF;
+            --gradient-1: linear-gradient(135deg, #0052FF 0%, #00C2FF 100%);
+            --gradient-2: linear-gradient(135deg, #6C3AED 0%, #0052FF 100%);
+            --gradient-3: linear-gradient(135deg, #0052FF 0%, #6C3AED 50%, #00C2FF 100%);
+            --gradient-mesh: radial-gradient(at 20% 80%, rgba(0, 82, 255, 0.08) 0%, transparent 50%),
+                             radial-gradient(at 80% 20%, rgba(0, 194, 255, 0.06) 0%, transparent 50%),
+                             radial-gradient(at 50% 50%, rgba(108, 58, 237, 0.04) 0%, transparent 50%);
+            --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
+            --shadow-md: 0 4px 16px rgba(15, 23, 42, 0.08);
+            --shadow-lg: 0 12px 40px rgba(15, 23, 42, 0.12);
+            --shadow-xl: 0 24px 60px rgba(15, 23, 42, 0.16);
+            --shadow-glow: 0 0 40px rgba(0, 82, 255, 0.15);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --radius-2xl: 32px;
+            --transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ============================================
+           RESET & BASE
+           ============================================ */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--dark);
+            background-color: var(--white);
+            line-height: 1.7;
+            font-size: 16px;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Space Grotesk', 'Inter', sans-serif;
+            font-weight: 700;
+            line-height: 1.2;
+            color: var(--dark);
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: var(--transition);
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* ============================================
+           UTILITY CLASSES
+           ============================================ */
+        .section-padding {
+            padding: 100px 0;
+        }
+
+        .section-padding-sm {
+            padding: 70px 0;
+        }
+
+        .bg-mesh {
+            background: var(--gradient-mesh), var(--white);
+        }
+
+        .bg-dark-section {
+            background: var(--dark);
+            color: var(--gray-200);
+        }
+
+        .bg-dark-section h2,
+        .bg-dark-section h3,
+        .bg-dark-section h4 {
+            color: var(--white);
+        }
+
+        .text-gradient {
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .badge-primary {
+            background: rgba(0, 82, 255, 0.1);
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 0.8rem;
+            padding: 6px 16px;
+            border-radius: 100px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .badge-accent {
+            background: rgba(108, 58, 237, 0.1);
+            color: var(--accent);
+            font-weight: 600;
+            font-size: 0.75rem;
+            padding: 4px 12px;
+            border-radius: 100px;
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 640px;
+            margin: 0 auto 60px;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+        }
+
+        .section-header p {
+            font-size: 1.1rem;
+            color: var(--gray-500);
+        }
+
+        /* ============================================
+           ANIMATED BACKGROUND ELEMENTS
+           ============================================ */
+        .floating-shapes {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .floating-shapes .shape {
+            position: absolute;
+            border-radius: 50%;
+            animation: float-shape 20s infinite ease-in-out;
+        }
+
+        .floating-shapes .shape-1 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(0, 82, 255, 0.07) 0%, transparent 70%);
+            top: -100px;
+            right: -100px;
+            animation-delay: 0s;
+        }
+
+        .floating-shapes .shape-2 {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(0, 194, 255, 0.06) 0%, transparent 70%);
+            bottom: -50px;
+            left: -80px;
+            animation-delay: -7s;
+        }
+
+        .floating-shapes .shape-3 {
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(108, 58, 237, 0.05) 0%, transparent 70%);
+            top: 40%;
+            right: 20%;
+            animation-delay: -14s;
+        }
+
+        @keyframes float-shape {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(30px, -40px) scale(1.05); }
+            50% { transform: translate(-20px, 20px) scale(0.95); }
+            75% { transform: translate(15px, 30px) scale(1.02); }
+        }
+
+        /* ============================================
+           NAVBAR
+           ============================================ */
+        .navbar-main {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 12px 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .navbar-inner {
+            background: rgba(255, 255, 255, 0.82);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 16px;
+            padding: 10px 24px;
+            box-shadow: 0 2px 16px rgba(15, 23, 42, 0.06), 0 1px 3px rgba(15, 23, 42, 0.04);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .navbar-main.scrolled {
+            padding: 8px 0;
+        }
+
+        .navbar-main.scrolled .navbar-inner {
+            background: rgba(255, 255, 255, 0.96);
+            border-color: var(--gray-200);
+            border-radius: 14px;
+            box-shadow: 0 4px 24px rgba(15, 23, 42, 0.08), 0 1px 4px rgba(15, 23, 42, 0.05);
+        }
+
+        .navbar-brand-custom {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--dark) !important;
+            letter-spacing: -0.3px;
+            white-space: nowrap;
+        }
+
+        .navbar-brand-custom:hover {
+            color: var(--dark) !important;
+        }
+
+        .navbar-brand-custom .brand-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.05rem;
+            transition: var(--transition);
+        }
+
+        .navbar-brand-custom .brand-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .navbar-brand-custom:hover .brand-icon {
+            transform: scale(1.05);
+        }
+
+        /* Nav pill container */
+        .nav-pills-container {
+            display: flex;
+            align-items: center;
+            background: var(--gray-50);
+            border-radius: 10px;
+            padding: 4px;
+            gap: 2px;
+        }
+
+        .nav-link-custom {
+            font-weight: 500;
+            font-size: 0.84rem;
+            color: var(--gray-500) !important;
+            padding: 7px 14px !important;
+            border-radius: 8px;
+            transition: all 0.25s ease;
+            position: relative;
+            white-space: nowrap;
+            letter-spacing: -0.1px;
+        }
+
+        .nav-link-custom:hover {
+            color: var(--dark) !important;
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .nav-link-custom.active {
+            color: var(--primary) !important;
+            background: var(--white);
+            box-shadow: 0 1px 4px rgba(15, 23, 42, 0.08);
+            font-weight: 600;
+        }
+
+        /* Nav action buttons */
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-nav-login {
+            padding: 8px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.84rem;
+            border: 1.5px solid var(--gray-200);
+            color: var(--gray-600);
+            background: var(--white);
+            transition: all 0.25s ease;
+            white-space: nowrap;
+        }
+
+        .btn-nav-login:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: rgba(0, 82, 255, 0.03);
+            box-shadow: 0 2px 8px rgba(0, 82, 255, 0.1);
+        }
+
+        .btn-nav-register {
+            padding: 8px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.84rem;
+            border: none;
+            color: var(--white);
+            background: var(--primary);
+            transition: all 0.25s ease;
+            white-space: nowrap;
+            box-shadow: 0 2px 8px rgba(0, 82, 255, 0.25);
+        }
+
+        .btn-nav-register:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(0, 82, 255, 0.35);
+            color: var(--white);
+        }
+
+        /* Mobile hamburger */
+        .nav-toggle-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            border: 1.5px solid var(--gray-200);
+            background: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark);
+            font-size: 1.15rem;
+            transition: var(--transition);
+        }
+
+        .nav-toggle-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* Mobile nav dropdown */
+        .nav-mobile-menu {
+            padding-top: 16px;
+            margin-top: 12px;
+            border-top: 1px solid var(--gray-100);
+        }
+
+        .nav-mobile-menu .nav-pills-container {
+            flex-direction: column;
+            background: transparent;
+            padding: 0;
+            gap: 2px;
+        }
+
+        .nav-mobile-menu .nav-link-custom {
+            width: 100%;
+            padding: 10px 14px !important;
+            font-size: 0.9rem;
+        }
+
+        .nav-mobile-menu .nav-actions {
+            margin-top: 12px;
+            flex-direction: column;
+        }
+
+        .nav-mobile-menu .nav-actions a {
+            width: 100%;
+            text-align: center;
+            padding: 10px 20px;
+        }
+
+        /* ============================================
+           HERO SECTION
+           ============================================ */
+        .hero-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            background: var(--white);
+            padding-top: 80px;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 55%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 82, 255, 0.03) 0%, rgba(0, 194, 255, 0.04) 50%, rgba(108, 58, 237, 0.03) 100%);
+            clip-path: polygon(15% 0, 100% 0, 100% 100%, 0% 100%);
+            z-index: 0;
+        }
+
+        /* Grid pattern overlay */
+        .hero-grid-pattern {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(0, 82, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 82, 255, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            z-index: 0;
+            mask-image: radial-gradient(ellipse at 70% 50%, black 30%, transparent 70%);
+            -webkit-mask-image: radial-gradient(ellipse at 70% 50%, black 30%, transparent 70%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-overline {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 82, 255, 0.08);
+            color: var(--primary);
+            padding: 8px 20px;
+            border-radius: 100px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-bottom: 24px;
+            letter-spacing: 0.3px;
+            animation: fadeInUp 0.8s ease both;
+        }
+
+        .hero-overline .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+            animation: pulse-dot 2s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+
+        .hero-title {
+            font-size: clamp(2.5rem, 5.5vw, 4.2rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            color: var(--dark);
+            animation: fadeInUp 0.8s ease 0.15s both;
+        }
+
+        .hero-title .highlight {
+            position: relative;
+            display: inline-block;
+        }
+
+        .hero-title .highlight::after {
+            content: '';
+            position: absolute;
+            bottom: 4px;
+            left: 0;
+            width: 100%;
+            height: 12px;
+            background: rgba(0, 82, 255, 0.12);
+            border-radius: 4px;
+            z-index: -1;
+        }
+
+        .hero-description {
+            font-size: 1.15rem;
+            color: var(--gray-500);
+            line-height: 1.8;
+            max-width: 520px;
+            margin-bottom: 40px;
+            animation: fadeInUp 0.8s ease 0.3s both;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.8s ease 0.45s both;
+        }
+
+        .btn-hero-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 32px;
+            border-radius: var(--radius-md);
+            background: var(--gradient-1);
+            color: var(--white);
+            font-weight: 600;
+            font-size: 1rem;
+            box-shadow: 0 8px 24px rgba(0, 82, 255, 0.3);
+            transition: var(--transition);
+            border: none;
+        }
+
+        .btn-hero-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(0, 82, 255, 0.4);
+            color: var(--white);
+        }
+
+        .btn-hero-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 32px;
+            border-radius: var(--radius-md);
+            background: var(--white);
+            color: var(--dark);
+            font-weight: 600;
+            font-size: 1rem;
+            border: 1.5px solid var(--gray-200);
+            transition: var(--transition);
+        }
+
+        .btn-hero-secondary:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Hero visual */
+        .hero-visual {
+            position: relative;
+            z-index: 2;
+            animation: fadeInRight 1s ease 0.3s both;
+        }
+
+        .hero-card-stack {
+            position: relative;
+            width: 100%;
+            max-width: 520px;
+            margin: 0 auto;
+        }
+
+        .hero-float-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--gray-100);
+            position: relative;
+        }
+
+        .hero-float-card .card-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--gray-400);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+        }
+
+        .hero-float-card .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .hero-float-card .stat-item {
+            text-align: center;
+        }
+
+        .hero-float-card .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-float-card .stat-label {
+            font-size: 0.8rem;
+            color: var(--gray-500);
+            font-weight: 500;
+        }
+
+        /* Floating mini cards */
+        .mini-float {
+            position: absolute;
+            background: var(--white);
+            border-radius: var(--radius-md);
+            padding: 16px 20px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--gray-100);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: float-mini 6s infinite ease-in-out;
+            z-index: 3;
+        }
+
+        .mini-float-1 {
+            top: -20px;
+            right: -30px;
+            animation-delay: 0s;
+        }
+
+        .mini-float-2 {
+            bottom: 40px;
+            left: -40px;
+            animation-delay: -3s;
+        }
+
+        .mini-float .mf-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .mini-float .mf-text {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--dark);
+            white-space: nowrap;
+        }
+
+        .mini-float .mf-sub {
+            font-weight: 400;
+            font-size: 0.75rem;
+            color: var(--gray-400);
+        }
+
+        @keyframes float-mini {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInRight {
+            from { opacity: 0; transform: translateX(40px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Hero tech lines decoration */
+        .tech-lines {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            z-index: 0;
+            opacity: 0.5;
+        }
+
+        .tech-lines .line {
+            position: absolute;
+            background: var(--gradient-1);
+            opacity: 0.08;
+            border-radius: 2px;
+        }
+
+        .tech-lines .line-h {
+            width: 100%;
+            height: 1px;
+        }
+
+        .tech-lines .line-v {
+            width: 1px;
+            height: 100%;
+        }
+
+        /* ============================================
+           STATS BAR
+           ============================================ */
+        .stats-bar {
+            background: var(--dark);
+            padding: 50px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stats-bar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-3);
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: 10px;
+        }
+
+        .stat-box .stat-num {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: var(--white);
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .stat-box .stat-num .counter-suffix {
+            font-size: 1.8rem;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-box .stat-txt {
+            font-size: 0.9rem;
+            color: var(--gray-400);
+            font-weight: 500;
+        }
+
+        /* ============================================
+           ABOUT SECTION
+           ============================================ */
+        .about-section {
+            position: relative;
+        }
+
+        .about-image-block {
+            position: relative;
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+        }
+
+        .about-image-block .about-img-placeholder {
+            width: 100%;
+            height: 420px;
+            background: linear-gradient(135deg, var(--gray-50) 0%, var(--gray-100) 100%);
+            border-radius: var(--radius-xl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-img-placeholder .inner-design {
+            text-align: center;
+        }
+
+        .about-img-placeholder .inner-design i {
+            font-size: 4rem;
+            color: var(--primary);
+            opacity: 0.3;
+        }
+
+        .about-experience-badge {
+            position: absolute;
+            bottom: 24px;
+            right: 24px;
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 20px 24px;
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+        }
+
+        .about-experience-badge .num {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--primary);
+            line-height: 1;
+        }
+
+        .about-experience-badge .txt {
+            font-size: 0.8rem;
+            color: var(--gray-500);
+            font-weight: 500;
+        }
+
+        .about-features {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 32px;
+        }
+
+        .about-feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 16px;
+            border-radius: var(--radius-md);
+            background: var(--gray-50);
+            transition: var(--transition);
+        }
+
+        .about-feature-item:hover {
+            background: rgba(0, 82, 255, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .about-feature-item .feat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-sm);
+            background: var(--gradient-1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .about-feature-item .feat-text h5 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 2px;
+            color: var(--dark);
+        }
+
+        .about-feature-item .feat-text p {
+            font-size: 0.8rem;
+            color: var(--gray-500);
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        /* ============================================
+           LABS / PROGRAMS CARDS
+           ============================================ */
+        .modern-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--gray-100);
+            padding: 32px 28px;
+            transition: var(--transition);
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .modern-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-1);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+            transform-origin: left;
+        }
+
+        .modern-card:hover {
+            border-color: rgba(0, 82, 255, 0.15);
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-4px);
+        }
+
+        .modern-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .modern-card .card-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            transition: var(--transition);
+        }
+
+        .modern-card .card-icon.blue { background: rgba(0, 82, 255, 0.08); color: var(--primary); }
+        .modern-card .card-icon.cyan { background: rgba(0, 194, 255, 0.1); color: var(--secondary); }
+        .modern-card .card-icon.purple { background: rgba(108, 58, 237, 0.08); color: var(--accent); }
+        .modern-card .card-icon.green { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+        .modern-card .card-icon.orange { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
+        .modern-card .card-icon.pink { background: rgba(236, 72, 153, 0.1); color: #EC4899; }
+
+        .modern-card:hover .card-icon {
+            transform: scale(1.1);
+        }
+
+        .modern-card h4 {
+            font-size: 1.15rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .modern-card p {
+            font-size: 0.9rem;
+            color: var(--gray-500);
+            margin-bottom: 0;
+            line-height: 1.7;
+        }
+
+        .modern-card .card-meta {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+
+        .modern-card .card-meta span {
+            font-size: 0.78rem;
+            color: var(--gray-400);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* ============================================
+           PROGRAMS SECTION WITH IMAGES
+           ============================================ */
+        .program-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            border: 1px solid var(--gray-100);
+            transition: var(--transition);
+            height: 100%;
+        }
+
+        .program-card:hover {
+            border-color: transparent;
+            box-shadow: var(--shadow-xl);
+            transform: translateY(-6px);
+        }
+
+        .program-card .program-img {
+            height: 200px;
+            background: linear-gradient(135deg, rgba(0, 82, 255, 0.05) 0%, rgba(108, 58, 237, 0.08) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .program-card .program-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .program-card .program-img .program-icon-placeholder {
+            font-size: 3rem;
+            color: var(--primary);
+            opacity: 0.2;
+        }
+
+        .program-card .program-img .program-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+        }
+
+        .program-card .program-body {
+            padding: 24px;
+        }
+
+        .program-card .program-body h4 {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .program-card .program-body p {
+            font-size: 0.875rem;
+            color: var(--gray-500);
+            margin-bottom: 16px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .program-card .program-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 16px;
+            border-top: 1px solid var(--gray-100);
+        }
+
+        .program-card .program-meta .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.78rem;
+            color: var(--gray-400);
+        }
+
+        /* ============================================
+           EVENTS SECTION
+           ============================================ */
+        .event-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--gray-100);
+            padding: 28px;
+            transition: var(--transition);
+            height: 100%;
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        .event-card:hover {
+            border-color: transparent;
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-3px);
+        }
+
+        .event-date-box {
+            background: var(--gradient-1);
+            border-radius: var(--radius-md);
+            padding: 14px 18px;
+            text-align: center;
+            color: var(--white);
+            flex-shrink: 0;
+            min-width: 70px;
+        }
+
+        .event-date-box .day {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .event-date-box .month {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            opacity: 0.9;
+            letter-spacing: 0.5px;
+        }
+
+        .event-info h4 {
+            font-size: 1.05rem;
+            margin-bottom: 6px;
+        }
+
+        .event-info .event-type-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 10px;
+            border-radius: 100px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .event-type-badge.masterclass { background: rgba(0, 82, 255, 0.08); color: var(--primary); }
+        .event-type-badge.hackathon { background: rgba(108, 58, 237, 0.08); color: var(--accent); }
+        .event-type-badge.lecture { background: rgba(16, 185, 129, 0.08); color: var(--success); }
+        .event-type-badge.competition { background: rgba(245, 158, 11, 0.08); color: var(--warning); }
+
+        .event-info p {
+            font-size: 0.85rem;
+            color: var(--gray-500);
+            margin-bottom: 8px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .event-info .event-loc {
+            font-size: 0.8rem;
+            color: var(--gray-400);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* ============================================
+           PROJECTS SECTION
+           ============================================ */
+        .project-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--gray-100);
+            overflow: hidden;
+            transition: var(--transition);
+            height: 100%;
+        }
+
+        .project-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-4px);
+            border-color: transparent;
+        }
+
+        .project-card .project-img {
+            height: 180px;
+            background: linear-gradient(135deg, var(--gray-50) 0%, var(--gray-100) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .project-card .project-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .project-card .project-img .stage-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+        }
+
+        .project-card .project-body {
+            padding: 20px;
+        }
+
+        .project-card .project-body h4 {
+            font-size: 1rem;
+            margin-bottom: 6px;
+        }
+
+        .project-card .project-body p {
+            font-size: 0.85rem;
+            color: var(--gray-500);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .project-card .project-footer {
+            padding: 12px 20px;
+            border-top: 1px solid var(--gray-100);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: var(--gray-400);
+        }
+
+        /* Stage badges */
+        .stage-idea { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
+        .stage-prototype { background: rgba(0, 82, 255, 0.1); color: var(--primary); }
+        .stage-mvp { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+
+        /* ============================================
+           NEWS SECTION
+           ============================================ */
+        .news-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            border: 1px solid var(--gray-100);
+            transition: var(--transition);
+            height: 100%;
+        }
+
+        .news-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-4px);
+            border-color: transparent;
+        }
+
+        .news-card .news-img {
+            height: 200px;
+            background: linear-gradient(135deg, rgba(0, 82, 255, 0.04), rgba(108, 58, 237, 0.06));
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .news-card .news-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .news-card:hover .news-img img {
+            transform: scale(1.05);
+        }
+
+        .news-card .news-body {
+            padding: 24px;
+        }
+
+        .news-card .news-date {
+            font-size: 0.78rem;
+            color: var(--gray-400);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .news-card .news-body h4 {
+            font-size: 1.05rem;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .news-card .news-body p {
+            font-size: 0.85rem;
+            color: var(--gray-500);
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* ============================================
+           PARTNERS SECTION
+           ============================================ */
+        .partners-section {
+            background: var(--gray-50);
+        }
+
+        .partner-logo-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 28px 24px;
+            background: var(--white);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--gray-100);
+            transition: var(--transition);
+            height: 100px;
+        }
+
+        .partner-logo-item:hover {
+            box-shadow: var(--shadow-md);
+            border-color: rgba(0, 82, 255, 0.15);
+            transform: translateY(-3px);
+        }
+
+        .partner-logo-item img {
+            max-height: 50px;
+            max-width: 140px;
+            object-fit: contain;
+            filter: grayscale(100%);
+            opacity: 0.5;
+            transition: var(--transition);
+        }
+
+        .partner-logo-item:hover img {
+            filter: grayscale(0%);
+            opacity: 1;
+        }
+
+        .partner-logo-item .partner-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--gray-400);
+            transition: var(--transition);
+        }
+
+        .partner-logo-item:hover .partner-name {
+            color: var(--primary);
+        }
+
+        /* ============================================
+           CTA SECTION
+           ============================================ */
+        .cta-section {
+            background: var(--dark);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: -200px;
+            right: -200px;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0, 82, 255, 0.15) 0%, transparent 60%);
+            z-index: 0;
+        }
+
+        .cta-section::after {
+            content: '';
+            position: absolute;
+            bottom: -150px;
+            left: -150px;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(108, 58, 237, 0.1) 0%, transparent 60%);
+            z-index: 0;
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .cta-content h2 {
+            color: var(--white);
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+        }
+
+        .cta-content p {
+            color: var(--gray-400);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto 36px;
+        }
+
+        .btn-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 40px;
+            border-radius: var(--radius-md);
+            background: var(--gradient-1);
+            color: var(--white);
+            font-weight: 700;
+            font-size: 1.05rem;
+            box-shadow: 0 8px 30px rgba(0, 82, 255, 0.4);
+            transition: var(--transition);
+            border: none;
+        }
+
+        .btn-cta:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 14px 40px rgba(0, 82, 255, 0.5);
+            color: var(--white);
+        }
+
+        /* ============================================
+           CONTACT SECTION
+           ============================================ */
+        .contact-info-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--gray-100);
+            padding: 32px;
+            height: 100%;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 16px 0;
+        }
+
+        .contact-item:not(:last-child) {
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .contact-item .ci-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-sm);
+            background: rgba(0, 82, 255, 0.06);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .contact-item h5 {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--gray-400);
+            margin-bottom: 2px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .contact-item p {
+            font-size: 0.95rem;
+            color: var(--dark);
+            font-weight: 500;
+            margin: 0;
+        }
+
+        .contact-item p a {
+            color: var(--primary);
+        }
+
+        .contact-item p a:hover {
+            text-decoration: underline;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .social-links a {
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            border: 1px solid var(--gray-200);
+            color: var(--gray-500);
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            background: var(--primary);
+            color: var(--white);
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 82, 255, 0.3);
+        }
+
+        .contact-map {
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            height: 100%;
+            min-height: 350px;
+            border: 1px solid var(--gray-100);
+        }
+
+        .contact-map iframe {
+            width: 100%;
+            height: 100%;
+            min-height: 350px;
+            border: 0;
+        }
+
+        .contact-map .map-placeholder {
+            width: 100%;
+            height: 100%;
+            min-height: 350px;
+            background: var(--gray-50);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-400);
+        }
+
+        /* ============================================
+           FOOTER
+           ============================================ */
+        .footer-main {
+            background: var(--dark);
+            padding: 60px 0 0;
+        }
+
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .footer-brand .fb-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .footer-brand .fb-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .footer-brand .fb-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--white);
+        }
+
+        .footer-description {
+            font-size: 0.9rem;
+            color: var(--gray-400);
+            line-height: 1.7;
+            margin-bottom: 20px;
+            max-width: 320px;
+        }
+
+        .footer-heading {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--gray-300);
+            margin-bottom: 20px;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links li a {
+            font-size: 0.9rem;
+            color: var(--gray-400);
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .footer-links li a:hover {
+            color: var(--primary-light);
+            transform: translateX(4px);
+        }
+
+        .footer-bottom {
+            margin-top: 40px;
+            padding: 20px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            text-align: center;
+        }
+
+        .footer-bottom p {
+            font-size: 0.85rem;
+            color: var(--gray-500);
+            margin: 0;
+        }
+
+        /* ============================================
+           SCROLL TO TOP
+           ============================================ */
+        .scroll-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-sm);
+            background: var(--gradient-1);
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: var(--transition);
+            box-shadow: 0 4px 16px rgba(0, 82, 255, 0.3);
+            cursor: pointer;
+            border: none;
+        }
+
+        .scroll-top.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .scroll-top:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(0, 82, 255, 0.4);
+        }
+
+        /* ============================================
+           RESPONSIVE
+           ============================================ */
+        @media (max-width: 991.98px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            .hero-visual {
+                margin-top: 60px;
+            }
+            .mini-float-1 { right: 0; top: -10px; }
+            .mini-float-2 { left: 0; }
+            .section-header h2 { font-size: 2rem; }
+            .stat-box .stat-num { font-size: 2.2rem; }
+            .about-features {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 767.98px) {
+            .section-padding { padding: 60px 0; }
+            .hero-section { padding-top: 100px; min-height: auto; padding-bottom: 60px; }
+            .hero-title { font-size: 2rem; }
+            .hero-description { font-size: 1rem; }
+            .hero-actions { flex-direction: column; }
+            .hero-actions a { text-align: center; justify-content: center; }
+            .hero-card-stack { max-width: 100%; }
+            .mini-float { display: none; }
+            .stat-box .stat-num { font-size: 1.8rem; }
+            .event-card { flex-direction: column; }
+            .cta-content h2 { font-size: 1.8rem; }
+            .navbar-inner { padding: 10px 16px; border-radius: 14px; }
+        }
+
+        /* ============================================
+           LOADING ANIMATION
+           ============================================ */
+        .page-loader {
+            position: fixed;
+            inset: 0;
+            background: var(--white);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .page-loader.hide {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader-spinner {
+            width: 48px;
+            height: 48px;
+            border: 3px solid var(--gray-200);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ============================================
+           COUNTER ANIMATION
+           ============================================ */
+        .counter-animated {
+            display: inline-block;
+        }
+
+        /* ============================================
+           MARQUEE / INFINITE SCROLL for partners
+           ============================================ */
+        .marquee-track {
+            display: flex;
+            gap: 24px;
+            animation: marquee 30s linear infinite;
+        }
+
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .marquee-track:hover {
+            animation-play-state: paused;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Page Loader -->
+    <div class="page-loader" id="pageLoader">
+        <div class="loader-spinner"></div>
+    </div>
+
+    <!-- ==========================================
+         NAVBAR
+         ========================================== -->
+    <nav class="navbar-main" id="mainNav">
+        <div class="container">
+            <div class="navbar-inner">
+                <div class="d-flex align-items-center justify-content-between">
+                    <a href="{% url 'landing' %}" class="navbar-brand-custom">
+                        <span class="brand-icon">{% if site.site_favicon %}<img src="{{ site.site_favicon.url }}" alt="{{ site.site_name }}" style="width:28px;height:28px;object-fit:contain;">{% else %}<i class="bi bi-cpu"></i>{% endif %}</span>
+                        <span class="d-none d-sm-inline">{{ site.site_name|truncatewords:3 }}</span>
+                    </a>
+
+                    <!-- Desktop nav -->
+                    <div class="d-none d-lg-flex align-items-center gap-3">
+                        <div class="nav-pills-container">
+                            <a href="#about" class="nav-link-custom">Biz haqimizda</a>
+                            <a href="#labs" class="nav-link-custom">Laboratoriyalar</a>
+                            <a href="#programs" class="nav-link-custom">Dasturlar</a>
+                            <a href="#events" class="nav-link-custom">Tadbirlar</a>
+                            <a href="#projects" class="nav-link-custom">Loyihalar</a>
+                            <a href="#news" class="nav-link-custom">Yangiliklar</a>
+                            <a href="#contact" class="nav-link-custom">Aloqa</a>
+                        </div>
+                        <div class="nav-actions">
+                            <a href="{% url 'login' %}" class="btn-nav-login">Kirish</a>
+                            <a href="{% url 'register' %}" class="btn-nav-register">Ro'yxatdan o'tish</a>
+                        </div>
+                    </div>
+
+                    <!-- Mobile toggle -->
+                    <button class="nav-toggle-btn d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-label="Menu">
+                        <i class="bi bi-list"></i>
+                    </button>
+                </div>
+
+                <!-- Mobile menu -->
+                <div class="collapse d-lg-none nav-mobile-menu" id="navMenu">
+                    <div class="nav-pills-container">
+                        <a href="#about" class="nav-link-custom">Biz haqimizda</a>
+                        <a href="#labs" class="nav-link-custom">Laboratoriyalar</a>
+                        <a href="#programs" class="nav-link-custom">Dasturlar</a>
+                        <a href="#events" class="nav-link-custom">Tadbirlar</a>
+                        <a href="#projects" class="nav-link-custom">Loyihalar</a>
+                        <a href="#news" class="nav-link-custom">Yangiliklar</a>
+                        <a href="#contact" class="nav-link-custom">Aloqa</a>
+                    </div>
+                    <div class="nav-actions">
+                        <a href="{% url 'login' %}" class="btn-nav-login">Kirish</a>
+                        <a href="{% url 'register' %}" class="btn-nav-register">Ro'yxatdan o'tish</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ==========================================
+         HERO SECTION
+         ========================================== -->
+    <section class="hero-section" id="hero">
+        <div class="hero-grid-pattern"></div>
+        <div class="floating-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+        </div>
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 hero-content">
+                    <div class="hero-overline">
+                        <span class="dot"></span>
+                        Innovatsiya markazi
+                    </div>
+                    <h1 class="hero-title">
+                        Kelajak
+                        <span class="text-gradient">texnologiyalari</span>
+                        yoshlar <span class="highlight">qo'lida</span>
+                    </h1>
+                    <p class="hero-description">
+                        {{ site.slogan|default:"Zamonaviy laboratoriyalar, professional mentorlar va innovatsion dasturlar orqali yoshlarning texnologik salohiyatini ro'yobga chiqaramiz." }}
+                    </p>
+                    <div class="hero-actions">
+                        <a href="{% url 'register' %}" class="btn-hero-primary">
+                            <i class="bi bi-rocket-takeoff"></i>
+                            Boshlash
+                        </a>
+                        <a href="#about" class="btn-hero-secondary">
+                            <i class="bi bi-play-circle"></i>
+                            Batafsil
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-6 hero-visual">
+                    <div class="hero-card-stack">
+                        <!-- Main Stats Card -->
+                        <div class="hero-float-card">
+                            <div class="card-label">Innovatsiya ko'rsatkichlari</div>
+                            <div class="stats-row">
+                                <div class="stat-item">
+                                    <div class="stat-number counter-animated" data-target="{{ stats.labs|default:'6' }}">0</div>
+                                    <div class="stat-label">Laboratoriya</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-number counter-animated" data-target="{{ stats.programs|default:'12' }}">0</div>
+                                    <div class="stat-label">Dastur</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-number counter-animated" data-target="{{ stats.projects|default:'50' }}">0</div>
+                                    <div class="stat-label">Loyiha</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Floating Mini Cards -->
+                        <div class="mini-float mini-float-1">
+                            <div class="mf-icon" style="background: rgba(16, 185, 129, 0.1); color: var(--success);">
+                                <i class="bi bi-check-circle-fill"></i>
+                            </div>
+                            <div>
+                                <div class="mf-text">Ro'yxatdan o'ting</div>
+                                <div class="mf-sub">Bepul kurslar</div>
+                            </div>
+                        </div>
+
+                        <div class="mini-float mini-float-2">
+                            <div class="mf-icon" style="background: rgba(108, 58, 237, 0.1); color: var(--accent);">
+                                <i class="bi bi-mortarboard-fill"></i>
+                            </div>
+                            <div>
+                                <div class="mf-text">Sertifikat oling</div>
+                                <div class="mf-sub">Rasmiy hujjat</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         STATS BAR
+         ========================================== -->
+    <section class="stats-bar">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="0">
+                    <div class="stat-box">
+                        <div class="stat-num">
+                            <span class="counter-animated" data-target="{{ stats.labs|default:'6' }}">0</span><span class="counter-suffix">+</span>
+                        </div>
+                        <div class="stat-txt">Laboratoriyalar</div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="100">
+                    <div class="stat-box">
+                        <div class="stat-num">
+                            <span class="counter-animated" data-target="{{ stats.programs|default:'12' }}">0</span><span class="counter-suffix">+</span>
+                        </div>
+                        <div class="stat-txt">Ta'lim dasturlari</div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="200">
+                    <div class="stat-box">
+                        <div class="stat-num">
+                            <span class="counter-animated" data-target="500">0</span><span class="counter-suffix">+</span>
+                        </div>
+                        <div class="stat-txt">O'quvchilar</div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="300">
+                    <div class="stat-box">
+                        <div class="stat-num">
+                            <span class="counter-animated" data-target="{{ stats.projects|default:'50' }}">0</span><span class="counter-suffix">+</span>
+                        </div>
+                        <div class="stat-txt">Innovatsion loyihalar</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         ABOUT SECTION
+         ========================================== -->
+    <section class="about-section section-padding bg-mesh" id="about">
+        <div class="container">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-6" data-aos="fade-right">
+                    <div class="about-image-block">
+                        <div class="about-img-placeholder">
+                            {% if site.site_logo %}
+                                <img src="{{ site.site_logo.url }}" alt="{{ site.site_name }}" style="max-width:60%; max-height:60%; object-fit:contain;">
+                            {% else %}
+                                <div class="inner-design">
+                                    <i class="bi bi-buildings"></i>
+                                    <p class="mt-3" style="color: var(--gray-400); font-size: 0.9rem;">{{ site.site_name }}</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="about-experience-badge" data-aos="zoom-in" data-aos-delay="300">
+                            <div class="num">YIM</div>
+                            <div class="txt">Innovatsiya markazi</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6" data-aos="fade-left">
+                    <span class="badge-primary mb-3 d-inline-block">Biz haqimizda</span>
+                    <h2>Yoshlar uchun zamonaviy <span class="text-gradient">innovatsiya</span> maydoni</h2>
+                    <p class="mt-3" style="color: var(--gray-500); font-size: 1rem; line-height: 1.8;">
+                        {{ site.about_text|default:"Yoshlar innovatsiya markazi — bu zamonaviy texnologiyalar, robototexnika, sun'iy intellekt, dasturlash va boshqa yo'nalishlar bo'yicha yoshlarni o'qitish va ularning innovatsion g'oyalarini amalga oshirishga yordam beruvchi markaz. Bizning maqsadimiz — har bir yoshning texnologik salohiyatini ro'yobga chiqarish." }}
+                    </p>
+                    <div class="about-features">
+                        <div class="about-feature-item">
+                            <div class="feat-icon"><i class="bi bi-cpu"></i></div>
+                            <div class="feat-text">
+                                <h5>Zamonaviy laboratoriyalar</h5>
+                                <p>Eng so'nggi texnologiyalar</p>
+                            </div>
+                        </div>
+                        <div class="about-feature-item">
+                            <div class="feat-icon"><i class="bi bi-people"></i></div>
+                            <div class="feat-text">
+                                <h5>Professional mentorlar</h5>
+                                <p>Tajribali mutaxassislar</p>
+                            </div>
+                        </div>
+                        <div class="about-feature-item">
+                            <div class="feat-icon"><i class="bi bi-trophy"></i></div>
+                            <div class="feat-text">
+                                <h5>Tanlovlar va xakatonlar</h5>
+                                <p>Amaliy tajriba</p>
+                            </div>
+                        </div>
+                        <div class="about-feature-item">
+                            <div class="feat-icon"><i class="bi bi-patch-check"></i></div>
+                            <div class="feat-text">
+                                <h5>Rasmiy sertifikatlar</h5>
+                                <p>Kasbiy rivojlanish</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         LABORATORIES SECTION
+         ========================================== -->
+    <section class="section-padding" id="labs">
+        <div class="container">
+            <div class="section-header" data-aos="fade-up">
+                <span class="badge-primary mb-3 d-inline-block">Laboratoriyalar</span>
+                <h2>Zamonaviy <span class="text-gradient">laboratoriyalar</span></h2>
+                <p>Eng so'nggi texnologiyalar bilan jihozlangan laboratoriyalarimizda amaliy ko'nikmalar hosil qiling</p>
+            </div>
+            <div class="row g-4">
+                {% for lab in laboratories %}
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:forloop.counter0 }}0">
+                    <div class="modern-card">
+                        <div class="card-icon {% cycle 'blue' 'cyan' 'purple' 'green' 'orange' 'pink' %}">
+                            <i class="bi bi-{{ lab.icon|default:'cpu' }}"></i>
+                        </div>
+                        <h4>{{ lab.name }}</h4>
+                        <p>{{ lab.description|truncatewords:20 }}</p>
+                        {% if lab.programs.count > 0 %}
+                        <div class="card-meta">
+                            <span><i class="bi bi-book"></i> {{ lab.programs.count }} dastur</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% empty %}
+                <!-- Default placeholder cards when no labs exist -->
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="0">
+                    <div class="modern-card">
+                        <div class="card-icon blue"><i class="bi bi-robot"></i></div>
+                        <h4>Robototexnika</h4>
+                        <p>Arduino, Raspberry Pi va zamonaviy robotlar bilan ishlash ko'nikmalari</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="modern-card">
+                        <div class="card-icon purple"><i class="bi bi-braces"></i></div>
+                        <h4>Dasturlash</h4>
+                        <p>Python, JavaScript, C++ va boshqa zamonaviy dasturlash tillari</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="modern-card">
+                        <div class="card-icon cyan"><i class="bi bi-gpu-card"></i></div>
+                        <h4>Sun'iy intellekt</h4>
+                        <p>Machine Learning, Deep Learning va Data Science asoslari</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="300">
+                    <div class="modern-card">
+                        <div class="card-icon green"><i class="bi bi-phone"></i></div>
+                        <h4>Mobil dasturlash</h4>
+                        <p>Android, iOS va cross-platform mobil ilovalar yaratish</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="400">
+                    <div class="modern-card">
+                        <div class="card-icon orange"><i class="bi bi-brush"></i></div>
+                        <h4>3D modellash</h4>
+                        <p>CAD, 3D printer, lazer kesish va prototiplash texnologiyalari</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="500">
+                    <div class="modern-card">
+                        <div class="card-icon pink"><i class="bi bi-shield-check"></i></div>
+                        <h4>Kiberxavfsizlik</h4>
+                        <p>Tarmoq xavfsizligi, penetration testing va axborot himoyasi</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         PROGRAMS SECTION
+         ========================================== -->
+    <section class="section-padding bg-mesh" id="programs">
+        <div class="container">
+            <div class="section-header" data-aos="fade-up">
+                <span class="badge-primary mb-3 d-inline-block">Dasturlar</span>
+                <h2>Ta'lim <span class="text-gradient">dasturlari</span></h2>
+                <p>Boshlang'ichdan ilg'or darajagacha — har bir yoshga mos ta'lim dasturlari</p>
+            </div>
+            <div class="row g-4">
+                {% for program in programs %}
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+                    <div class="program-card">
+                        <div class="program-img">
+                            {% if program.image %}
+                                <img src="{{ program.image.url }}" alt="{{ program.name }}">
+                            {% else %}
+                                <i class="bi bi-book program-icon-placeholder"></i>
+                            {% endif %}
+                            <div class="program-badge">
+                                <span class="badge-accent">{{ program.get_level_display }}</span>
+                            </div>
+                        </div>
+                        <div class="program-body">
+                            <h4>{{ program.name }}</h4>
+                            <p>{{ program.description|truncatewords:18 }}</p>
+                            <div class="program-meta">
+                                <div class="meta-item">
+                                    <i class="bi bi-clock"></i>
+                                    {{ program.duration|default:"3 oy" }}
+                                </div>
+                                <div class="meta-item">
+                                    <i class="bi bi-person"></i>
+                                    {{ program.age_min }}-{{ program.age_max }} yosh
+                                </div>
+                                <div class="meta-item">
+                                    <i class="bi bi-geo-alt"></i>
+                                    {{ program.get_format_display }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="0">
+                    <div class="program-card">
+                        <div class="program-img"><i class="bi bi-robot program-icon-placeholder"></i><div class="program-badge"><span class="badge-accent">Boshlang'ich</span></div></div>
+                        <div class="program-body">
+                            <h4>Robototexnika asoslari</h4>
+                            <p>Arduino va sensorlar bilan robot yaratishni o'rganing</p>
+                            <div class="program-meta">
+                                <div class="meta-item"><i class="bi bi-clock"></i> 3 oy</div>
+                                <div class="meta-item"><i class="bi bi-person"></i> 10-16 yosh</div>
+                                <div class="meta-item"><i class="bi bi-geo-alt"></i> Offline</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="program-card">
+                        <div class="program-img"><i class="bi bi-code-slash program-icon-placeholder"></i><div class="program-badge"><span class="badge-accent">Ilg'or</span></div></div>
+                        <div class="program-body">
+                            <h4>Full-Stack dasturlash</h4>
+                            <p>Veb-ilovalarni noldan yaratishni professional darajada o'rganing</p>
+                            <div class="program-meta">
+                                <div class="meta-item"><i class="bi bi-clock"></i> 6 oy</div>
+                                <div class="meta-item"><i class="bi bi-person"></i> 14-25 yosh</div>
+                                <div class="meta-item"><i class="bi bi-geo-alt"></i> Gibrid</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="program-card">
+                        <div class="program-img"><i class="bi bi-gpu-card program-icon-placeholder"></i><div class="program-badge"><span class="badge-accent">Ilg'or</span></div></div>
+                        <div class="program-body">
+                            <h4>AI va Machine Learning</h4>
+                            <p>Sun'iy intellekt asoslari va amaliy loyihalar yaratish</p>
+                            <div class="program-meta">
+                                <div class="meta-item"><i class="bi bi-clock"></i> 4 oy</div>
+                                <div class="meta-item"><i class="bi bi-person"></i> 16-25 yosh</div>
+                                <div class="meta-item"><i class="bi bi-geo-alt"></i> Online</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         EVENTS SECTION
+         ========================================== -->
+    <section class="section-padding" id="events">
+        <div class="container">
+            <div class="section-header" data-aos="fade-up">
+                <span class="badge-primary mb-3 d-inline-block">Tadbirlar</span>
+                <h2>Yaqinlashayotgan <span class="text-gradient">tadbirlar</span></h2>
+                <p>Master-klasslar, xakatonlar va tanlovlarda ishtirok eting</p>
+            </div>
+            <div class="row g-4">
+                {% for event in events %}
+                <div class="col-md-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+                    <div class="event-card">
+                        <div class="event-date-box">
+                            <div class="day">{{ event.date|date:"d" }}</div>
+                            <div class="month">{{ event.date|date:"M" }}</div>
+                        </div>
+                        <div class="event-info">
+                            <span class="event-type-badge {{ event.event_type }}">
+                                {{ event.get_event_type_display }}
+                            </span>
+                            <h4>{{ event.title }}</h4>
+                            <p>{{ event.description|truncatewords:15 }}</p>
+                            {% if event.location %}
+                            <div class="event-loc">
+                                <i class="bi bi-geo-alt"></i> {{ event.location }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-md-6" data-aos="fade-up" data-aos-delay="0">
+                    <div class="event-card">
+                        <div class="event-date-box"><div class="day">15</div><div class="month">MAR</div></div>
+                        <div class="event-info">
+                            <span class="event-type-badge hackathon">Xakaton</span>
+                            <h4>Innovation Hackathon 2026</h4>
+                            <p>24 soatlik intensiv dasturlash marafoni — eng yaxshi g'oyalar uchun sovrinlar</p>
+                            <div class="event-loc"><i class="bi bi-geo-alt"></i> YIM, Asosiy zal</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="event-card">
+                        <div class="event-date-box"><div class="day">22</div><div class="month">MAR</div></div>
+                        <div class="event-info">
+                            <span class="event-type-badge masterclass">Master-klass</span>
+                            <h4>AI bilan kelajak texnologiyalari</h4>
+                            <p>Sun'iy intellektning hozirgi va kelajakdagi imkoniyatlari haqida</p>
+                            <div class="event-loc"><i class="bi bi-geo-alt"></i> Online (Zoom)</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="event-card">
+                        <div class="event-date-box"><div class="day">05</div><div class="month">APR</div></div>
+                        <div class="event-info">
+                            <span class="event-type-badge competition">Tanlov</span>
+                            <h4>Yosh innovatorlar tanlovi</h4>
+                            <p>Eng yaxshi innovatsion loyihalarni tanlash va mukofotlash</p>
+                            <div class="event-loc"><i class="bi bi-geo-alt"></i> YIM, Konferens-zal</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6" data-aos="fade-up" data-aos-delay="300">
+                    <div class="event-card">
+                        <div class="event-date-box"><div class="day">12</div><div class="month">APR</div></div>
+                        <div class="event-info">
+                            <span class="event-type-badge lecture">Ma'ruza</span>
+                            <h4>Startup ekosistemasi va investorlar</h4>
+                            <p>Startapni qanday boshlash, investorlar bilan muloqot qilish</p>
+                            <div class="event-loc"><i class="bi bi-geo-alt"></i> YIM, 2-qavat</div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         PROJECTS SECTION
+         ========================================== -->
+    <section class="section-padding bg-mesh" id="projects">
+        <div class="container">
+            <div class="section-header" data-aos="fade-up">
+                <span class="badge-primary mb-3 d-inline-block">Loyihalar</span>
+                <h2>Innovatsion <span class="text-gradient">loyihalar</span></h2>
+                <p>Yoshlar tomonidan yaratilgan eng yaxshi innovatsion loyihalar</p>
+            </div>
+            <div class="row g-4">
+                {% for project in projects %}
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+                    <div class="project-card">
+                        <div class="project-img">
+                            {% if project.image %}
+                                <img src="{{ project.image.url }}" alt="{{ project.title }}">
+                            {% else %}
+                                <i class="bi bi-lightbulb" style="font-size: 2.5rem; color: var(--primary); opacity: 0.15;"></i>
+                            {% endif %}
+                            <span class="stage-badge badge-accent stage-{{ project.stage }}">
+                                {{ project.get_stage_display }}
+                            </span>
+                        </div>
+                        <div class="project-body">
+                            <h4>{{ project.title }}</h4>
+                            <p>{{ project.description|truncatewords:15 }}</p>
+                        </div>
+                        <div class="project-footer">
+                            <i class="bi bi-person-circle"></i>
+                            {{ project.author.get_full_name|default:project.author.username|default:"Noma'lum" }}
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="0">
+                    <div class="project-card">
+                        <div class="project-img"><i class="bi bi-lightbulb" style="font-size:2.5rem;color:var(--primary);opacity:.15"></i><span class="stage-badge badge-accent stage-prototype">Prototip</span></div>
+                        <div class="project-body"><h4>Smart Agriculture System</h4><p>IoT sensorlar yordamida qishloq xo'jaligini avtomatlashtirish tizimi</p></div>
+                        <div class="project-footer"><i class="bi bi-person-circle"></i> Jasur Karimov</div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="project-card">
+                        <div class="project-img"><i class="bi bi-robot" style="font-size:2.5rem;color:var(--accent);opacity:.15"></i><span class="stage-badge badge-accent stage-mvp">MVP</span></div>
+                        <div class="project-body"><h4>EduBot — AI o'quv yordamchisi</h4><p>Sun'iy intellekt asosida ishlaydigan shaxsiy o'quv yordamchisi</p></div>
+                        <div class="project-footer"><i class="bi bi-person-circle"></i> Malika Rahimova</div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="project-card">
+                        <div class="project-img"><i class="bi bi-graph-up-arrow" style="font-size:2.5rem;color:var(--success);opacity:.15"></i><span class="stage-badge badge-accent stage-idea">G'oya</span></div>
+                        <div class="project-body"><h4>GreenCity Analytics</h4><p>Shahar ekologiyasini monitoring qilish va tahlil qilish platformasi</p></div>
+                        <div class="project-footer"><i class="bi bi-person-circle"></i> Sardor Alimov</div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         NEWS SECTION
+         ========================================== -->
+    <section class="section-padding" id="news">
+        <div class="container">
+            <div class="section-header" data-aos="fade-up">
+                <span class="badge-primary mb-3 d-inline-block">Yangiliklar</span>
+                <h2>So'nggi <span class="text-gradient">yangiliklar</span></h2>
+                <p>Markaz faoliyati va yangi imkoniyatlar haqida bilib oling</p>
+            </div>
+            <div class="row g-4">
+                {% for item in news %}
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+                    <div class="news-card">
+                        <div class="news-img">
+                            {% if item.image %}
+                                <img src="{{ item.image.url }}" alt="{{ item.title }}">
+                            {% else %}
+                                <i class="bi bi-newspaper" style="font-size: 3rem; color: var(--primary); opacity: 0.12;"></i>
+                            {% endif %}
+                        </div>
+                        <div class="news-body">
+                            <div class="news-date">
+                                <i class="bi bi-calendar3"></i>
+                                {{ item.published_at|date:"d M, Y"|default:item.created_at|date:"d M, Y" }}
+                            </div>
+                            <h4>{{ item.title }}</h4>
+                            <p>{{ item.content|truncatewords:20|striptags }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="0">
+                    <div class="news-card">
+                        <div class="news-img"><i class="bi bi-newspaper" style="font-size:3rem;color:var(--primary);opacity:.12"></i></div>
+                        <div class="news-body">
+                            <div class="news-date"><i class="bi bi-calendar3"></i> 15 Fev, 2026</div>
+                            <h4>Yangi robototexnika laboratoriyasi ochildi</h4>
+                            <p>Markazimizda eng zamonaviy uskunalar bilan jihozlangan yangi laboratoriya o'z faoliyatini boshladi</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="news-card">
+                        <div class="news-img"><i class="bi bi-trophy" style="font-size:3rem;color:var(--warning);opacity:.12"></i></div>
+                        <div class="news-body">
+                            <div class="news-date"><i class="bi bi-calendar3"></i> 10 Fev, 2026</div>
+                            <h4>Xalqaro xakatonda g'alaba</h4>
+                            <p>Markaz o'quvchilari xalqaro innovatsiya xakatonida birinchi o'rinni qo'lga kiritdi</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="news-card">
+                        <div class="news-img"><i class="bi bi-people" style="font-size:3rem;color:var(--accent);opacity:.12"></i></div>
+                        <div class="news-body">
+                            <div class="news-date"><i class="bi bi-calendar3"></i> 05 Fev, 2026</div>
+                            <h4>Yangi ta'lim dasturlari e'lon qilindi</h4>
+                            <p>2026-yil bahorda boshlanadigan yangi ta'lim dasturlariga ro'yxatdan o'tish boshlandi</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         PARTNERS SECTION
+         ========================================== -->
+    {% if partners %}
+    <section class="partners-section section-padding-sm" id="partners">
+        <div class="container">
+            <div class="section-header" data-aos="fade-up">
+                <span class="badge-primary mb-3 d-inline-block">Hamkorlar</span>
+                <h2>Bizning <span class="text-gradient">hamkorlar</span></h2>
+                <p>Ishonchli hamkorlarimiz bilan birgalikda rivojlanamiz</p>
+            </div>
+            <div class="row g-3 justify-content-center">
+                {% for partner in partners %}
+                <div class="col-6 col-md-4 col-lg-3 col-xl-2" data-aos="zoom-in" data-aos-delay="{{ forloop.counter0 }}0">
+                    <a href="{{ partner.website|default:'#' }}" target="_blank" class="partner-logo-item d-block text-center">
+                        {% if partner.logo %}
+                            <img src="{{ partner.logo.url }}" alt="{{ partner.name }}">
+                        {% else %}
+                            <span class="partner-name">{{ partner.name }}</span>
+                        {% endif %}
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- ==========================================
+         CTA SECTION
+         ========================================== -->
+    <section class="cta-section section-padding" id="cta">
+        <div class="container">
+            <div class="cta-content" data-aos="zoom-in">
+                <span class="badge-primary mb-3 d-inline-block" style="background: rgba(0,82,255,0.2); color: #7EB3FF;">Hoziroq boshlang</span>
+                <h2>Kelajagingizni bugun <br>shakllantiring</h2>
+                <p>Innovatsiya markaziga qo'shiling va zamonaviy texnologiyalarni o'rganing. Ro'yxatdan o'tish mutlaqo bepul!</p>
+                <a href="{% url 'register' %}" class="btn-cta">
+                    <i class="bi bi-rocket-takeoff"></i>
+                    Bepul ro'yxatdan o'tish
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         CONTACT SECTION
+         ========================================== -->
+    <section class="section-padding bg-mesh" id="contact">
+        <div class="container">
+            <div class="section-header" data-aos="fade-up">
+                <span class="badge-primary mb-3 d-inline-block">Aloqa</span>
+                <h2>Biz bilan <span class="text-gradient">bog'laning</span></h2>
+                <p>Savollaringiz bormi? Biz bilan bog'laning — har doim yordam berishga tayyormiz</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-5" data-aos="fade-right">
+                    <div class="contact-info-card">
+                        {% if site.phone %}
+                        <div class="contact-item">
+                            <div class="ci-icon"><i class="bi bi-telephone"></i></div>
+                            <div>
+                                <h5>Telefon</h5>
+                                <p><a href="tel:{{ site.phone }}">{{ site.phone }}</a></p>
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% if site.email %}
+                        <div class="contact-item">
+                            <div class="ci-icon"><i class="bi bi-envelope"></i></div>
+                            <div>
+                                <h5>Email</h5>
+                                <p><a href="mailto:{{ site.email }}">{{ site.email }}</a></p>
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% if site.address %}
+                        <div class="contact-item">
+                            <div class="ci-icon"><i class="bi bi-geo-alt"></i></div>
+                            <div>
+                                <h5>Manzil</h5>
+                                <p>{{ site.address }}</p>
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% if site.working_hours %}
+                        <div class="contact-item">
+                            <div class="ci-icon"><i class="bi bi-clock"></i></div>
+                            <div>
+                                <h5>Ish vaqti</h5>
+                                <p>{{ site.working_hours }}</p>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <!-- Default contact info if nothing configured -->
+                        {% if not site.phone and not site.email %}
+                        <div class="contact-item">
+                            <div class="ci-icon"><i class="bi bi-telephone"></i></div>
+                            <div>
+                                <h5>Telefon</h5>
+                                <p><a href="tel:+998901234567">+998 (90) 123-45-67</a></p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="ci-icon"><i class="bi bi-envelope"></i></div>
+                            <div>
+                                <h5>Email</h5>
+                                <p><a href="mailto:info@yim.uz">info@yim.uz</a></p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="ci-icon"><i class="bi bi-geo-alt"></i></div>
+                            <div>
+                                <h5>Manzil</h5>
+                                <p>Toshkent shahri, Innovatsiya ko'chasi, 1-uy</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="ci-icon"><i class="bi bi-clock"></i></div>
+                            <div>
+                                <h5>Ish vaqti</h5>
+                                <p>Du-Sha: 09:00 - 18:00</p>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <div class="social-links">
+                            {% if site.telegram_link %}
+                            <a href="{{ site.telegram_link }}" target="_blank" title="Telegram"><i class="bi bi-telegram"></i></a>
+                            {% endif %}
+                            {% if site.instagram_link %}
+                            <a href="{{ site.instagram_link }}" target="_blank" title="Instagram"><i class="bi bi-instagram"></i></a>
+                            {% endif %}
+                            {% if site.youtube_link %}
+                            <a href="{{ site.youtube_link }}" target="_blank" title="YouTube"><i class="bi bi-youtube"></i></a>
+                            {% endif %}
+                            {% if not site.telegram_link and not site.instagram_link %}
+                            <a href="#" title="Telegram"><i class="bi bi-telegram"></i></a>
+                            <a href="#" title="Instagram"><i class="bi bi-instagram"></i></a>
+                            <a href="#" title="YouTube"><i class="bi bi-youtube"></i></a>
+                            <a href="#" title="Facebook"><i class="bi bi-facebook"></i></a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-7" data-aos="fade-left">
+                    <div class="contact-map">
+                        {% if site.map_embed %}
+                            {{ site.map_embed|safe }}
+                        {% else %}
+                            <div class="map-placeholder">
+                                <div class="text-center">
+                                    <i class="bi bi-geo-alt" style="font-size: 3rem; opacity: 0.3;"></i>
+                                    <p class="mt-2" style="font-size: 0.9rem;">Xarita admin panelda sozlanadi</p>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         FOOTER
+         ========================================== -->
+    <footer class="footer-main">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <div class="footer-brand">
+                        <span class="fb-icon">{% if site.site_favicon %}<img src="{{ site.site_favicon.url }}" alt="{{ site.site_name }}" style="width:28px;height:28px;object-fit:contain;">{% else %}<i class="bi bi-cpu"></i>{% endif %}</span>
+                        <span class="fb-name">{{ site.site_name|truncatewords:3 }}</span>
+                    </div>
+                    <p class="footer-description">
+                        {{ site.slogan|default:"Kelajak texnologiyalari — yoshlar qo'lida. Zamonaviy laboratoriyalar va innovatsion dasturlar." }}
+                    </p>
+                    <div class="social-links">
+                        {% if site.telegram_link %}
+                        <a href="{{ site.telegram_link }}" target="_blank"><i class="bi bi-telegram"></i></a>
+                        {% endif %}
+                        {% if site.instagram_link %}
+                        <a href="{{ site.instagram_link }}" target="_blank"><i class="bi bi-instagram"></i></a>
+                        {% endif %}
+                        {% if site.youtube_link %}
+                        <a href="{{ site.youtube_link }}" target="_blank"><i class="bi bi-youtube"></i></a>
+                        {% endif %}
+                        {% if not site.telegram_link and not site.instagram_link %}
+                        <a href="#"><i class="bi bi-telegram"></i></a>
+                        <a href="#"><i class="bi bi-instagram"></i></a>
+                        <a href="#"><i class="bi bi-youtube"></i></a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-6 col-lg-2">
+                    <h6 class="footer-heading">Sahifalar</h6>
+                    <ul class="footer-links">
+                        <li><a href="#about">Biz haqimizda</a></li>
+                        <li><a href="#labs">Laboratoriyalar</a></li>
+                        <li><a href="#programs">Dasturlar</a></li>
+                        <li><a href="#events">Tadbirlar</a></li>
+                        <li><a href="#projects">Loyihalar</a></li>
+                    </ul>
+                </div>
+                <div class="col-6 col-lg-2">
+                    <h6 class="footer-heading">Foydali</h6>
+                    <ul class="footer-links">
+                        <li><a href="#news">Yangiliklar</a></li>
+                        <li><a href="#contact">Aloqa</a></li>
+                        <li><a href="{% url 'register' %}">Ro'yxatdan o'tish</a></li>
+                        <li><a href="{% url 'login' %}">Kirish</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4">
+                    <h6 class="footer-heading">Aloqa</h6>
+                    <ul class="footer-links">
+                        {% if site.address %}
+                        <li><a href="#contact"><i class="bi bi-geo-alt"></i> {{ site.address|truncatewords:6 }}</a></li>
+                        {% endif %}
+                        {% if site.phone %}
+                        <li><a href="tel:{{ site.phone }}"><i class="bi bi-telephone"></i> {{ site.phone }}</a></li>
+                        {% endif %}
+                        {% if site.email %}
+                        <li><a href="mailto:{{ site.email }}"><i class="bi bi-envelope"></i> {{ site.email }}</a></li>
+                        {% endif %}
+                        {% if not site.address and not site.phone %}
+                        <li><a href="#contact"><i class="bi bi-geo-alt"></i> Toshkent shahri</a></li>
+                        <li><a href="tel:+998901234567"><i class="bi bi-telephone"></i> +998 (90) 123-45-67</a></li>
+                        <li><a href="mailto:info@yim.uz"><i class="bi bi-envelope"></i> info@yim.uz</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; {% now "Y" %} {{ site.site_name }}. Barcha huquqlar himoyalangan.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll to top -->
+    <button class="scroll-top" id="scrollTop" aria-label="Yuqoriga">
+        <i class="bi bi-chevron-up"></i>
+    </button>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- AOS JS -->
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+
+    <script>
+        // ============================================
+        // PAGE LOADER
+        // ============================================
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('pageLoader');
+            if (loader) {
+                setTimeout(() => loader.classList.add('hide'), 300);
+                setTimeout(() => loader.remove(), 800);
+            }
+        });
+
+        // ============================================
+        // INIT AOS
+        // ============================================
+        AOS.init({
+            duration: 700,
+            easing: 'ease-out-cubic',
+            once: true,
+            offset: 60,
+            disable: window.innerWidth < 768 ? 'phone' : false,
+        });
+
+        // ============================================
+        // NAVBAR SCROLL EFFECT
+        // ============================================
+        const navbar = document.getElementById('mainNav');
+        const scrollThreshold = 50;
+
+        function handleNavScroll() {
+            if (window.scrollY > scrollThreshold) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        }
+
+        window.addEventListener('scroll', handleNavScroll, { passive: true });
+        handleNavScroll();
+
+        // ============================================
+        // COUNTER ANIMATION
+        // ============================================
+        const counters = document.querySelectorAll('.counter-animated');
+        let countersAnimated = false;
+
+        function animateCounters() {
+            if (countersAnimated) return;
+
+            counters.forEach(counter => {
+                const target = parseInt(counter.getAttribute('data-target')) || 0;
+                const duration = 2000;
+                const startTime = performance.now();
+
+                function updateCounter(currentTime) {
+                    const elapsed = currentTime - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+
+                    // Ease out cubic
+                    const eased = 1 - Math.pow(1 - progress, 3);
+                    const current = Math.floor(eased * target);
+
+                    counter.textContent = current;
+
+                    if (progress < 1) {
+                        requestAnimationFrame(updateCounter);
+                    } else {
+                        counter.textContent = target;
+                    }
+                }
+
+                requestAnimationFrame(updateCounter);
+            });
+
+            countersAnimated = true;
+        }
+
+        // Trigger when stats bar is in view
+        const statsBar = document.querySelector('.stats-bar');
+        if (statsBar) {
+            const statsObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        animateCounters();
+                        statsObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.3 });
+            statsObserver.observe(statsBar);
+        }
+
+        // ============================================
+        // SCROLL TO TOP
+        // ============================================
+        const scrollTopBtn = document.getElementById('scrollTop');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 400) {
+                scrollTopBtn.classList.add('show');
+            } else {
+                scrollTopBtn.classList.remove('show');
+            }
+        }, { passive: true });
+
+        scrollTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // ============================================
+        // SMOOTH SCROLL FOR NAV LINKS
+        // ============================================
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+
+                const target = document.querySelector(targetId);
+                if (target) {
+                    e.preventDefault();
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+                    // Close mobile nav
+                    const navCollapse = document.getElementById('navMenu');
+                    if (navCollapse && navCollapse.classList.contains('show')) {
+                        const bsCollapse = bootstrap.Collapse.getInstance(navCollapse);
+                        if (bsCollapse) bsCollapse.hide();
+                    }
+                }
+            });
+        });
+
+        // ============================================
+        // ACTIVE NAV STATE ON SCROLL
+        // ============================================
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-link-custom');
+
+        function updateActiveNav() {
+            const scrollPos = window.scrollY + 120;
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.offsetHeight;
+                const sectionId = section.getAttribute('id');
+
+                if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === `#${sectionId}`) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }
+
+        window.addEventListener('scroll', updateActiveNav, { passive: true });
+
+        // ============================================
+        // PARALLAX-LIKE SUBTLE EFFECT ON HERO
+        // ============================================
+        const heroSection = document.querySelector('.hero-section');
+        const floatingShapes = document.querySelectorAll('.floating-shapes .shape');
+
+        if (heroSection && window.innerWidth > 991) {
+            window.addEventListener('mousemove', (e) => {
+                const x = (e.clientX / window.innerWidth - 0.5) * 20;
+                const y = (e.clientY / window.innerHeight - 0.5) * 20;
+
+                floatingShapes.forEach((shape, i) => {
+                    const factor = (i + 1) * 0.5;
+                    shape.style.transform = `translate(${x * factor}px, ${y * factor}px)`;
+                });
+            });
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,150 @@
+{% extends "student/base.html" %}
+
+{% block title %}{{ program.name }}{% endblock %}
+{% block page_title %}{{ program.name }}{% endblock %}
+
+{% block content %}
+<div class="fade-up">
+    <!-- Back Button -->
+    <div class="mb-4">
+        <a href="{% url 'student:program_list' %}" class="btn-ghost">
+            <i class="bi bi-arrow-left me-1"></i>Dasturlarga qaytish
+        </a>
+    </div>
+
+    <!-- Program Banner -->
+    <div class="glass-card mb-4 overflow-hidden">
+        <div class="program-banner">
+            {% if program.image %}
+                <img src="{{ program.image.url }}" alt="{{ program.name }}" style="width: 100%; height: 300px; object-fit: cover;">
+            {% else %}
+                <div style="height: 300px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--primary), var(--purple));">
+                    <i class="bi bi-journal-code" style="font-size: 5rem; color: rgba(255,255,255,0.3);"></i>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Main Info -->
+        <div class="col-lg-8">
+            <div class="glass-card mb-4">
+                <div class="glass-card-body">
+                    <div class="d-flex flex-wrap gap-2 mb-3">
+                        {% if program.level == "beginner" %}
+                            <span class="level-badge beginner">Boshlang'ich</span>
+                        {% elif program.level == "advanced" %}
+                            <span class="level-badge advanced">Ilg'or</span>
+                        {% endif %}
+                        <span style="display: inline-flex; align-items: center; gap: 4px; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; background: rgba(0, 209, 255, 0.1); color: var(--neon-cyan); border: 1px solid rgba(0, 209, 255, 0.2);">
+                            <i class="bi bi-display"></i> {{ program.get_format_display|default:program.format }}
+                        </span>
+                    </div>
+
+                    <h2 style="color: var(--text-main); margin-bottom: 16px;">{{ program.name }}</h2>
+
+                    <div style="color: var(--text-dim); line-height: 1.8; font-size: 1rem;">
+                        {{ program.description|linebreaksbr }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <div class="glass-card mb-4">
+                <div class="glass-card-header">
+                    <h6 style="margin: 0; color: var(--text-main);">
+                        <i class="bi bi-info-circle me-2" style="color: var(--neon-cyan);"></i>Ma'lumotlar
+                    </h6>
+                </div>
+                <div class="glass-card-body">
+                    <div class="detail-list">
+                        <div class="detail-item">
+                            <span class="detail-label"><i class="bi bi-clock me-2"></i>Davomiyligi</span>
+                            <span class="detail-value">{{ program.duration }}</span>
+                        </div>
+                        {% if program.age_range %}
+                        <div class="detail-item">
+                            <span class="detail-label"><i class="bi bi-people me-2"></i>Yosh oralig'i</span>
+                            <span class="detail-value">{{ program.age_range }}</span>
+                        </div>
+                        {% endif %}
+                        {% if program.laboratory %}
+                        <div class="detail-item">
+                            <span class="detail-label"><i class="bi bi-building me-2"></i>Laboratoriya</span>
+                            <span class="detail-value">{{ program.laboratory.name }}</span>
+                        </div>
+                        {% endif %}
+                        {% if program.start_date %}
+                        <div class="detail-item">
+                            <span class="detail-label"><i class="bi bi-calendar-event me-2"></i>Boshlanish</span>
+                            <span class="detail-value">{{ program.start_date|date:"d.m.Y" }}</span>
+                        </div>
+                        {% endif %}
+                        {% if program.end_date %}
+                        <div class="detail-item">
+                            <span class="detail-label"><i class="bi bi-calendar-check me-2"></i>Tugash</span>
+                            <span class="detail-value">{{ program.end_date|date:"d.m.Y" }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Apply Section -->
+            <div class="glass-card">
+                <div class="glass-card-body text-center py-4">
+                    {% if already_applied %}
+                        <div class="mb-3">
+                            <i class="bi bi-check-circle" style="font-size: 2.5rem; color: var(--green);"></i>
+                        </div>
+                        <p style="color: var(--text-main); font-weight: 600; margin-bottom: 8px;">Siz allaqachon ariza topshirgansiz</p>
+                        <span class="status-badge status-{{ application_status|default:'pending' }}">
+                            {% if application_status == "approved" %}Tasdiqlangan
+                            {% elif application_status == "rejected" %}Rad etilgan
+                            {% else %}Kutilmoqda{% endif %}
+                        </span>
+                    {% else %}
+                        <div class="mb-3">
+                            <i class="bi bi-send" style="font-size: 2.5rem; color: var(--primary);"></i>
+                        </div>
+                        <p style="color: var(--text-dim); margin-bottom: 16px;">Ushbu dasturga qo'shilish uchun ariza topshiring</p>
+                        <a href="{% url 'student:program_apply' program.pk %}" class="btn-glow">
+                            <i class="bi bi-send me-1"></i>Ariza topshirish
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .detail-list {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+    .detail-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--dark-border);
+    }
+    .detail-item:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+    .detail-label {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+    }
+    .detail-value {
+        color: var(--text-main);
+        font-weight: 500;
+        font-size: 0.9rem;
+    }
+</style>
+{% endblock %}

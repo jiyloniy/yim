@@ -1,0 +1,90 @@
+{% extends "student/base.html" %}
+
+{% block title %}Tadbirlar{% endblock %}
+{% block page_title %}Tadbirlar{% endblock %}
+
+{% block content %}
+<div class="fade-up">
+    <!-- Type Filter -->
+    <div class="glass-card mb-4">
+        <div class="glass-card-body">
+            <div class="d-flex flex-wrap gap-2">
+                <a href="{% url 'student:event_list' %}" class="btn-ghost {% if not request.GET.type %}active{% endif %}">
+                    Barchasi
+                </a>
+                <a href="{% url 'student:event_list' %}?type=masterclass" class="btn-ghost {% if request.GET.type == 'masterclass' %}active{% endif %}">
+                    <i class="bi bi-mortarboard me-1"></i>Master-klass
+                </a>
+                <a href="{% url 'student:event_list' %}?type=hackathon" class="btn-ghost {% if request.GET.type == 'hackathon' %}active{% endif %}">
+                    <i class="bi bi-code-slash me-1"></i>Xakaton
+                </a>
+                <a href="{% url 'student:event_list' %}?type=lecture" class="btn-ghost {% if request.GET.type == 'lecture' %}active{% endif %}">
+                    <i class="bi bi-mic me-1"></i>Ma'ruza
+                </a>
+                <a href="{% url 'student:event_list' %}?type=competition" class="btn-ghost {% if request.GET.type == 'competition' %}active{% endif %}">
+                    <i class="bi bi-trophy me-1"></i>Tanlov
+                </a>
+            </div>
+        </div>
+    </div>
+
+    {% if events %}
+    <div class="row g-4">
+        {% for event in events %}
+        <div class="col-lg-6 fade-up" style="animation-delay: {{ forloop.counter0 }}00ms;">
+            <a href="{% url 'student:event_detail' event.pk %}" style="text-decoration: none;">
+                <div class="event-card">
+                    <div class="event-date-box">
+                        <span class="event-day">{{ event.date|date:"d" }}</span>
+                        <span class="event-month">{{ event.date|date:"M" }}</span>
+                    </div>
+                    <div class="event-info">
+                        <div class="mb-2">
+                            {% if event.event_type == "masterclass" %}
+                                <span class="event-type-badge type-masterclass">Master-klass</span>
+                            {% elif event.event_type == "hackathon" %}
+                                <span class="event-type-badge type-hackathon">Xakaton</span>
+                            {% elif event.event_type == "lecture" %}
+                                <span class="event-type-badge type-lecture">Ma'ruza</span>
+                            {% elif event.event_type == "competition" %}
+                                <span class="event-type-badge type-competition">Tanlov</span>
+                            {% endif %}
+                        </div>
+                        <h5 style="color: var(--text-main); margin-bottom: 6px;">{{ event.title }}</h5>
+                        <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+                            {% if event.time %}
+                            <span style="color: var(--text-muted); font-size: 0.85rem;">
+                                <i class="bi bi-clock me-1"></i>{{ event.time|time:"H:i" }}
+                            </span>
+                            {% endif %}
+                            {% if event.location %}
+                            <span style="color: var(--text-muted); font-size: 0.85rem;">
+                                <i class="bi bi-geo-alt me-1"></i>{{ event.location }}
+                            </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state fade-up">
+        <div class="empty-icon">
+            <i class="bi bi-calendar-x"></i>
+        </div>
+        <h5 style="color: var(--text-main);">Tadbirlar topilmadi</h5>
+        <p style="color: var(--text-dim);">Hozircha hech qanday tadbir rejalashtirilmagan.</p>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+    .btn-ghost.active {
+        background: rgba(0, 95, 253, 0.15);
+        border-color: var(--primary);
+        color: var(--primary);
+    }
+</style>
+{% endblock %}
