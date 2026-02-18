@@ -45,6 +45,8 @@ INSTALLED_APPS = [
 
 AUTH_USER_MODEL = 'accounts.User'
 
+CSRF_TRUSTED_ORIGINS = ['https://youthinno.uz', 'https://www.youthinno.uz']
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
